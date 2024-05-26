@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProfileEnum {
+  USER
+  SUPER_USER
+}
+
+model User {
+  id      BigInt      @id @default(autoincrement())
+  name    String
+  email   String
+  profile ProfileEnum
+  phone   String
+
+  students   Student[]
+  professors Professor[]
+  materials  Material[]
+  schedules labSchedule[]
+
+  @@map("users")
+}
+
+model Student {
+  enrollment String @id
+  user_id    BigInt
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("students")
+}
+
+model Professor {
+  enrollment String @id
+  user_id    BigInt
+
+  disciplines Discipline[]
+  user        User         @relation(fields: [user_id], references: [id])
+
+  @@map("professors")
+}
+
+model Discipline {
+  id                    BigInt @id
+  name                  String
+  professor_enrollement String
+
+  classes   Class[]
+  professor Professor @relation(fields: [professor_enrollement], references: [enrollment])
+
+  @@map("disciplines")
+}
+
+model Class {
+  id            BigInt @id @default(autoincrement())
+  start_time    String
+  end_time      String
+  date          String
+  day_week      String
+  discipline_id BigInt
+
+  discipline Discipline @relation(fields: [discipline_id], references: [id])
+
+  @@map("classes")
+}
+
+model Material {
+  id          BigInt       @id @default(autoincrement())
+  title       String
+  url         String
+  description String       @db.Text
+  type        TypeMaterial
+  user_id     BigInt
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("materials")
+}
+
+enum TypeMaterial {
+  DIDATICO
+  FORMAL
+}
+
+model labSchedule {
+  id         BigInt @id
+  start_time String
+  end_time   String
+  date       String
+  user_id    BigInt
+  lab_id     BigInt
+
+  user User @relation(fields: [user_id], references: [id])
+  lab  Lab  @relation(fields: [lab_id], references: [id])
+
+  @@map("lab_schedule")
+}
+
+model Lab {
+  id BigInt @id
+  code String
+
+  schedules labSchedule[]
+
+  @@map("labs")
+}
+
+
