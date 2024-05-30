@@ -28,7 +28,7 @@ model User {
   students   Student[]
   professors Professor[]
   materials  Material[]
-  schedules labSchedule[]
+  schedules  labSchedule[]
 
   @@map("users")
 }
@@ -67,7 +67,6 @@ model Class {
   id            BigInt @id @default(autoincrement())
   start_time    String
   end_time      String
-  date          String
   day_week      String
   discipline_id BigInt
 
@@ -109,12 +108,11 @@ model labSchedule {
 }
 
 model Lab {
-  id BigInt @id
+  id   BigInt @id
   code String
+  name String
 
   schedules labSchedule[]
 
   @@map("labs")
 }
-
-
