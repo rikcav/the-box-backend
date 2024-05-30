@@ -1,4 +1,4 @@
-export interface QuestDTO {
+export interface QuestionDTO {
     title: string;
     body: string;
     tags: string[];

@@ -1,10 +1,10 @@
-import { QuestDTO } from "../../model/dto/quest-dto";
-import { Quest } from "../../model/quest";
-import { IQuestRepository } from "../i-quest-repository";
+import { QuestionDTO } from "../../model/dto/question-dto";
+import { Question } from "../../model/question";
+import { IQuestionRepository } from "../i-question-repository";
 import { prisma } from "./prisma";
 
-export class QuestRepository implements IQuestRepository {
-  public async findQuestByid(id: string): Promise<Quest | null> {
+export class QuestionRepository implements IQuestionRepository {
+  public async findQuestionByid(id: string): Promise<Question | null> {
     return await prisma.question.findUnique({
       where: {
         id,
@@ -14,17 +14,17 @@ export class QuestRepository implements IQuestRepository {
       },
     });
   }
-  public async createQuest({
+  public async createQuestion({
     tags: listTags,
-    ...questDTO
-  }: QuestDTO): Promise<Quest> {
+    ...questionDTO
+  }: QuestionDTO): Promise<Question> {
     const tags = listTags.map((tag) => ({ id: tag }));
     return await prisma.question.create({
-      data: { ...questDTO, tags: { connect: tags } },
+      data: { ...questionDTO, tags: { connect: tags } },
       include: { tags: true },
     });
   }
-  public async deleteQuest(id: string): Promise<void> {
+  public async deleteQuestion(id: string): Promise<void> {
     await prisma.question.delete({ where: { id } });
   }
 }
