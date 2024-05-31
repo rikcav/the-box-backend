@@ -1,13 +1,36 @@
 import { sign } from "jsonwebtoken";
 import { prisma } from "../prisma/service";
-import { compare } from "bcrypt";
+import { userValidation } from "../user/validation";
+import { compare, hash } from "bcrypt";
 import { env } from "../env";
 
-export const registerUser = async () => {
+interface RegisterDto {
+  name: string;
+  email: string;
+  phone: string;
+  profile: "USER" | "SUPER_USER";
+  password: string;
+}
+
+export const registerUser = async (registerDto: RegisterDto) => {
   try {
-    console.log("Register user");
+    const parsedData = userValidation.parse(registerDto);
+    const hashedPassword = await hash(parsedData.password, 10);
+    const user = await prisma.user.create({
+      data: {
+        name: parsedData.name,
+        email: parsedData.email,
+        phone: parsedData.phone,
+        profile: parsedData.profile,
+        password: hashedPassword,
+      },
+    });
+
+    console.log("Registered user: ", user);
+
+    return user;
   } catch (e) {
-    console.log("Could not register user");
+    console.log("Could not register user", e);
     throw e;
   }
 };
