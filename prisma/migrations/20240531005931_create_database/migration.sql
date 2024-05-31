@@ -9,6 +9,7 @@ CREATE TABLE "users" (
     "id" BIGSERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "profile" "ProfileEnum" NOT NULL,
     "phone" TEXT NOT NULL,
 
@@ -83,6 +84,9 @@ CREATE TABLE "labs" (
 
     CONSTRAINT "labs_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- AddForeignKey
 ALTER TABLE "students" ADD CONSTRAINT "students_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
