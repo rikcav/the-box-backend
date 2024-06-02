@@ -2,6 +2,7 @@ import { sign } from "jsonwebtoken";
 import { prisma } from "../prisma/service";
 import { compare } from "bcrypt";
 import { env } from "../env";
+import { BadCredentialsException } from "../errors/bad-credentials-exception";
 
 export const registerUser = async () => {
   try {

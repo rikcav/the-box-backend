@@ -1,6 +1,7 @@
 import express from "express";
 import { ZodError, z } from "zod";
 import { authenticateService } from "./service";
+import { HttpException } from "../errors/http-exception";
 
 export const register = async (req: express.Request, res: express.Response) => {
   try {
