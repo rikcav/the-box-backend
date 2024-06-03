@@ -3,6 +3,7 @@ import { prisma } from "../prisma/service";
 import { userValidation } from "../user/validation";
 import { compare, hash } from "bcrypt";
 import { env } from "../env";
+import { BadCredentialsException } from "../errors/bad-credentials-exception";
 
 interface RegisterDto {
   name: string;
