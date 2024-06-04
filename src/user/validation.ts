@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const userValidation = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   email: z.string().email(),
-  phone: z.string(),
+  phone: z.string().min(11).max(11),
   profile: z.enum(["USER", "SUPER_USER"]),
   password: z
     .string()
