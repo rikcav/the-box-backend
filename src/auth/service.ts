@@ -55,7 +55,7 @@ export const authenticateService = async (loginDto: LoginDto) => {
   return generateToken(user.id);
 };
 
-function generateToken(sub: bigint) {
+function generateToken(sub: number) {
   return sign({ sub }, env.SECRET_KEY, {
     algorithm: "HS512",
     expiresIn: "2 days",
