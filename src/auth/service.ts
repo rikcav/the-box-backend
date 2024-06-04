@@ -13,6 +13,13 @@ interface RegisterDto {
   password: string;
 }
 
+interface RegisterResponseDto {
+  name: string;
+  email: string;
+  phone: string;
+  profile: "USER" | "SUPER_USER";
+}
+
 export const registerUser = async (registerDto: RegisterDto) => {
   try {
     const parsedData = userValidation.parse(registerDto);
@@ -27,9 +34,16 @@ export const registerUser = async (registerDto: RegisterDto) => {
       },
     });
 
-    console.log("Registered user: ", user);
+    const registeredUser: RegisterResponseDto = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      profile: user.profile,
+    };
 
-    return user;
+    console.log("Registered user: ", registeredUser);
+
+    return registeredUser;
   } catch (e) {
     console.log("Could not register user", e);
     throw e;
