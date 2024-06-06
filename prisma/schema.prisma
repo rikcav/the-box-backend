@@ -38,6 +38,10 @@ model User {
   materials  Material[]
   schedules  labSchedule[]
   posts      Post[]
+  comments   Comment[]
+  like       Like[]
+  organizer  Organizer[]
+  register   Register[]
 
   @@map("users")
 }
@@ -73,9 +77,9 @@ model Discipline {
 }
 
 model Class {
-  id            Int    @id @default(autoincrement())
-  start_time    String
-  end_time      String
+  id            Int      @id @default(autoincrement())
+  start_time    DateTime @db.Time()
+  end_time      DateTime @db.Time()
   day_week      String
   discipline_id Int
 
@@ -103,10 +107,10 @@ enum TypeMaterial {
 }
 
 model labSchedule {
-  id         Int    @id @default(autoincrement())
-  start_time String
-  end_time   String
-  date       String
+  id         Int      @id
+  start_time DateTime @db.Time()
+  end_time   DateTime @db.Time()
+  date       DateTime @db.Date
   user_id    Int
   lab_id     Int
 
@@ -117,7 +121,7 @@ model labSchedule {
 }
 
 model Lab {
-  id   Int    @id
+  id   Int    @id @default(autoincrement())
   code String
   name String
 
@@ -127,14 +131,101 @@ model Lab {
 }
 
 model Post {
-  id         Int              @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
   title      String
-  content    String
-  created_at DateTime         @default(now())
+  content       String       @db.Text
+  created_at DateTime     @default(now())
+  user_id    Int
   category   PostCategoryEnum
 
-  user_id Int
-  user    User @relation(fields: [user_id], references: [id])
+  user     User      @relation(fields: [user_id], references: [id])
+  comments Comment[]
 
-  @@map("post")
+  @@map("posts")
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  body       String   @db.Text
+  user_id    Int
+  post_id    Int
+  created_at DateTime @default(now())
+
+  user User   @relation(fields: [user_id], references: [id])
+  post Post   @relation(fields: [post_id], references: [id])
+  like Like[]
+
+  @@map("comments")
+}
+
+model Like {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  comment_id Int
+  create_at  DateTime @default(now())
+
+  user    User    @relation(fields: [user_id], references: [id])
+  comment Comment @relation(fields: [comment_id], references: [id])
+
+  @@map("likes")
+}
+
+model Organizer {
+  id       Int @id @default(autoincrement())
+  user_id  Int
+  event_id Int
+
+  user  User  @relation(fields: [user_id], references: [id])
+  event Event @relation(fields: [event_id], references: [id])
+
+  @@map("organizers")
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @db.Text
+  start_date  DateTime @db.Date
+  end_date    DateTime @db.Date
+  start_time  DateTime @db.Time()
+  end_time    DateTime @db.Time()
+  speakers    String
+
+  organizers    Organizer[]
+  event_schedule EventSchedule[]
+
+  @@map("events")
+}
+
+model EventSchedule {
+  id          Int @id @default(autoincrement())
+  event_id    Int
+  schedule_id Int
+
+  event      Event    @relation(fields: [event_id], references: [id])
+  schedule   Schedule @relation(fields: [schedule_id], references: [id])
+
+  @@map("event_schedule")
+}
+
+model Schedule {
+  id     Int    @id @default(autoincrement())
+  year   String
+  period String
+
+  registers Register[]
+  event_schedule EventSchedule[]
+
+  @@map("schedule")
+}
+
+model Register {
+  id          Int @id @default(autoincrement())
+  user_id     Int
+  schedule_id Int
+
+  user     User     @relation(fields: [user_id], references: [id])
+  schedule Schedule @relation(fields: [schedule_id], references: [id])
+
+  @@map("registers")
 }
