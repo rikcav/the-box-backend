@@ -1,6 +1,6 @@
 import express from "express";
 import { ZodError } from "zod";
-import { createPost } from "./service";
+import * as postService from "./service";
 
 export const createNewPost = async (
   req: express.Request,
@@ -8,7 +8,7 @@ export const createNewPost = async (
 ) => {
   try {
     const createPostDto = req.body;
-    const post = await createPost(createPostDto);
+    const post = await postService.createPost(createPostDto);
     res.status(200).send({ message: "Registered", post });
   } catch (e) {
     console.log(e);
