@@ -7,7 +7,7 @@ export const register = async (req: express.Request, res: express.Response) => {
   try {
     const registerDto = req.body;
     const user = await registerUser(registerDto);
-    res.status(200).send({ message: "Registered", user });
+    res.status(201).send({ message: "Registered", user });
   } catch (e) {
     console.log(e);
 
