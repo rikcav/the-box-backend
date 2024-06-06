@@ -9,9 +9,13 @@ interface CreatePostDto {
   user_id: number;
 }
 
-export const getPosts = async () => {
+export const getPosts = async (page: number, size: number) => {
   try {
-    const posts = await postRepository.getPosts();
+    const skip = (page - 1) * size;
+    const take = size;
+
+    const posts = await postRepository.getPosts(skip, take);
+
     return posts;
   } catch (error) {
     console.log(error);
@@ -19,9 +23,17 @@ export const getPosts = async () => {
   }
 };
 
-export const getPostsByCategory = async (category: PostCategoryEnum) => {
+export const getPostsByCategory = async (
+  category: PostCategoryEnum,
+  page: number,
+  size: number,
+) => {
   try {
-    const posts = await postRepository.getPostsByCategory(category);
+    const skip = (page - 1) * size;
+    const take = size;
+
+    const posts = await postRepository.getPostsByCategory(category, skip, take);
+
     return posts;
   } catch (error) {
     console.log(error);
