@@ -10,7 +10,7 @@ export const getById = async (id: number) => {
   return user;
 };
 
-export const createUser = async (data: object) => {
+export const createUser = async (data: any) => {
   const user = await prisma.user.create({
     data,
   });
