@@ -5,7 +5,11 @@ import { PostCategoryEnum } from "@prisma/client";
 
 export const getPosts = async (req: express.Request, res: express.Response) => {
   try {
-    const posts = await postService.getPosts();
+    const page = parseInt(req.query.page as string) || 1;
+    const size = parseInt(req.query.size as string) || 10;
+
+    const posts = await postService.getPosts(page, size);
+
     res.status(200).send(posts);
   } catch (error) {
     console.log(error);
@@ -19,7 +23,11 @@ export const getPostsByCategory = async (
 ) => {
   try {
     const category = req.params.category as keyof typeof PostCategoryEnum;
-    const posts = await postService.getPostsByCategory(category);
+    const page = parseInt(req.query.page as string) || 1;
+    const size = parseInt(req.query.size as string) || 10;
+
+    const posts = await postService.getPostsByCategory(category, page, size);
+
     res.status(200).send(posts);
   } catch (error) {
     console.log(error);
