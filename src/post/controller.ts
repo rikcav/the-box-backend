@@ -2,7 +2,7 @@ import express from "express";
 import { ZodError } from "zod";
 import * as postService from "./service";
 
-export const createNewPost = async (
+export const createPost = async (
   req: express.Request,
   res: express.Response,
 ) => {
