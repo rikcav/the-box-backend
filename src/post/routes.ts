@@ -1,6 +1,6 @@
 import express from "express";
-import { createPost } from "./controller";
+import * as postController from "./controller";
 
 export const postRoutes = (app: express.Application) => {
-  app.post("/post", createPost);
+  app.post("/post", postController.createPost);
 };
