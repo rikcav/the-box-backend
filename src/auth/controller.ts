@@ -1,6 +1,6 @@
 import express from "express";
 import { ZodError, z } from "zod";
-import { authenticateService, registerUser } from "./service";
+import { authenticateService, logoutUser, registerUser } from "./service";
 import { HttpException } from "../errors/http-exception";
 
 export const register = async (req: express.Request, res: express.Response) => {
@@ -47,5 +47,16 @@ export const authenticateController = async (
 
     console.error(error);
     return response.status(500).send({ message: "Internal server error." });
+  }
+};
+
+export const logout = async (req: express.Request, res: express.Response) => {
+  const token = req.headers.authorization?.split(" ")[1] || "";
+  const userId = req.body.userId;
+  try {
+    await logoutUser(userId, token);
+    res.status(200).send("Logged out successfully");
+  } catch (e) {
+    res.status(500).send((e as Error).message);
   }
 };
