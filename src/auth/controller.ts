@@ -1,20 +1,27 @@
 import express from "express";
 import { ZodError, z } from "zod";
-import { authenticateService } from "./service";
+import { authenticateService, registerUser } from "./service";
 import { HttpException } from "../errors/http-exception";
 
 export const register = async (req: express.Request, res: express.Response) => {
   try {
-    res.status(200).send("Registered");
+    const registerDto = req.body;
+    const user = await registerUser(registerDto);
+    res.status(200).send({ message: "Registered", user });
   } catch (e) {
     console.log(e);
-    res.status(400).send(e);
+
+    if (e instanceof ZodError) {
+      res.status(400).send({ message: "Validation failed", errors: e });
+    } else {
+      res.status(400).send({ message: "Could not register user", error: e });
+    }
   }
 };
 
 export const authenticateController = async (
   request: express.Request,
-  response: express.Response
+  response: express.Response,
 ) => {
   const loginSchema = z.object({
     email: z.string().email("Invalid email!"),

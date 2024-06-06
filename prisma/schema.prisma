@@ -19,7 +19,7 @@ enum ProfileEnum {
 }
 
 model User {
-  id       BigInt      @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   name     String
   email    String      @unique
   password String
@@ -36,7 +36,7 @@ model User {
 
 model Student {
   enrollment String @id
-  user_id    BigInt
+  user_id    Int
 
   user User @relation(fields: [user_id], references: [id])
 
@@ -45,7 +45,7 @@ model Student {
 
 model Professor {
   enrollment String @id
-  user_id    BigInt
+  user_id    Int
 
   disciplines Discipline[]
   user        User         @relation(fields: [user_id], references: [id])
@@ -54,7 +54,7 @@ model Professor {
 }
 
 model Discipline {
-  id                    BigInt @id
+  id                    Int @id
   name                  String
   professor_enrollement String
 
@@ -65,11 +65,11 @@ model Discipline {
 }
 
 model Class {
-  id            BigInt @id @default(autoincrement())
+  id            Int @id @default(autoincrement())
   start_time    String
   end_time      String
   day_week      String
-  discipline_id BigInt
+  discipline_id Int
 
   discipline Discipline @relation(fields: [discipline_id], references: [id])
 
@@ -77,12 +77,12 @@ model Class {
 }
 
 model Material {
-  id          BigInt       @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   url         String
   description String       @db.Text
   type        TypeMaterial
-  user_id     BigInt
+  user_id     Int
 
   user User @relation(fields: [user_id], references: [id])
 
@@ -95,12 +95,12 @@ enum TypeMaterial {
 }
 
 model labSchedule {
-  id         BigInt @id
+  id         Int @id
   start_time String
   end_time   String
   date       String
-  user_id    BigInt
-  lab_id     BigInt
+  user_id    Int
+  lab_id     Int
 
   user User @relation(fields: [user_id], references: [id])
   lab  Lab  @relation(fields: [lab_id], references: [id])
@@ -109,7 +109,7 @@ model labSchedule {
 }
 
 model Lab {
-  id   BigInt @id
+  id   Int @id
   code String
   name String
 

@@ -6,7 +6,7 @@ CREATE TYPE "TypeMaterial" AS ENUM ('DIDATICO', 'FORMAL');
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "students" (
     "enrollment" TEXT NOT NULL,
-    "user_id" BIGINT NOT NULL,
+    "user_id" INTEGER NOT NULL,
 
     CONSTRAINT "students_pkey" PRIMARY KEY ("enrollment")
 );
@@ -27,14 +27,14 @@ CREATE TABLE "students" (
 -- CreateTable
 CREATE TABLE "professors" (
     "enrollment" TEXT NOT NULL,
-    "user_id" BIGINT NOT NULL,
+    "user_id" INTEGER NOT NULL,
 
     CONSTRAINT "professors_pkey" PRIMARY KEY ("enrollment")
 );
 
 -- CreateTable
 CREATE TABLE "disciplines" (
-    "id" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "professor_enrollement" TEXT NOT NULL,
 
@@ -43,42 +43,42 @@ CREATE TABLE "disciplines" (
 
 -- CreateTable
 CREATE TABLE "classes" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "start_time" TEXT NOT NULL,
     "end_time" TEXT NOT NULL,
     "day_week" TEXT NOT NULL,
-    "discipline_id" BIGINT NOT NULL,
+    "discipline_id" INTEGER NOT NULL,
 
     CONSTRAINT "classes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "materials" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "type" "TypeMaterial" NOT NULL,
-    "user_id" BIGINT NOT NULL,
+    "user_id" INTEGER NOT NULL,
 
     CONSTRAINT "materials_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "lab_schedule" (
-    "id" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL,
     "start_time" TEXT NOT NULL,
     "end_time" TEXT NOT NULL,
     "date" TEXT NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "lab_id" BIGINT NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "lab_id" INTEGER NOT NULL,
 
     CONSTRAINT "lab_schedule_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "labs" (
-    "id" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL,
     "code" TEXT NOT NULL,
     "name" TEXT NOT NULL,
 
