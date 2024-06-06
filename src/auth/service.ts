@@ -22,6 +22,12 @@ interface RegisterResponseDto {
 
 export const registerUser = async (registerDto: RegisterDto) => {
   try {
+    registerDto.phone = registerDto.phone
+      .replace("(", "")
+      .replace(")", "")
+      .replace("-", "")
+      .replace(" ", "");
+
     const parsedData = userValidation.parse(registerDto);
     const hashedPassword = await hash(parsedData.password, 10);
     const user = await prisma.user.create({
