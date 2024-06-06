@@ -19,6 +19,16 @@ export const getPosts = async () => {
   }
 };
 
+export const getPostsByCategory = async (category: PostCategoryEnum) => {
+  try {
+    const posts = await postRepository.getPostsByCategory(category);
+    return posts;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getPost = async (id: number) => {
   try {
     const post = await postRepository.getPost(id);
