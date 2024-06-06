@@ -1,10 +1,25 @@
 import express from "express";
 import { ZodError } from "zod";
 import * as postService from "./service";
+import { PostCategoryEnum } from "@prisma/client";
 
 export const getPosts = async (req: express.Request, res: express.Response) => {
   try {
     const posts = await postService.getPosts();
+    res.status(200).send(posts);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send();
+  }
+};
+
+export const getPostsByCategory = async (
+  req: express.Request,
+  res: express.Response,
+) => {
+  try {
+    const category = req.params.category as keyof typeof PostCategoryEnum;
+    const posts = await postService.getPostsByCategory(category);
     res.status(200).send(posts);
   } catch (error) {
     console.log(error);
