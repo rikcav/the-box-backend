@@ -1,8 +1,10 @@
 import { prisma } from "../prisma/service";
 import { PostCategoryEnum } from "@prisma/client";
 
-export const getPosts = async () => {
+export const getPosts = async (skip: number, take: number) => {
   const posts = await prisma.post.findMany({
+    skip,
+    take,
     orderBy: [
       {
         created_at: "desc",
@@ -12,8 +14,14 @@ export const getPosts = async () => {
   return posts;
 };
 
-export const getPostsByCategory = async (category: PostCategoryEnum) => {
+export const getPostsByCategory = async (
+  category: PostCategoryEnum,
+  skip: number,
+  take: number,
+) => {
   const posts = await prisma.post.findMany({
+    skip,
+    take,
     orderBy: [
       {
         created_at: "desc",
