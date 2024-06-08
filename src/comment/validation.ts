@@ -5,3 +5,8 @@ export const commentValidation = z.object({
   user_id: z.number(),
   post_id: z.number(),
 });
+
+export const commentUpdateValidation = z.object({
+  id: z.number(),
+  body: z.string().min(1),
+});
