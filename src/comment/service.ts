@@ -1,10 +1,15 @@
 import * as commentRepository from "./repository";
-import { commentValidation } from "./validation";
+import { commentUpdateValidation, commentValidation } from "./validation";
 
 interface CreateCommentDto {
   body: string;
   user_id: number;
   post_id: number;
+};
+
+interface UpdateCommentDto {
+  id: number;
+  body: string;
 };
 
 export const createComment = async (dataCommnent: CreateCommentDto) => {
@@ -22,6 +27,18 @@ export const createComment = async (dataCommnent: CreateCommentDto) => {
 export const deleteById = async (id: number) => {
   try {
     const comment = await commentRepository.deleteById(id);
+    return comment;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const updateById = async (dataUpdateCommnent: UpdateCommentDto) => {
+  try {
+    const data = commentUpdateValidation.parse(dataUpdateCommnent)
+    const comment = await commentRepository.updateById(data.id, {body: data.body});
+
     return comment;
   } catch (error) {
     console.log(error);
