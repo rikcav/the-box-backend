@@ -131,10 +131,10 @@ model Lab {
 }
 
 model Post {
-  id         Int          @id @default(autoincrement())
+  id         Int              @id @default(autoincrement())
   title      String
-  content       String       @db.Text
-  created_at DateTime     @default(now())
+  content    String           @db.Text
+  created_at DateTime         @default(now())
   user_id    Int
   category   PostCategoryEnum
 
@@ -191,7 +191,7 @@ model Event {
   end_time    DateTime @db.Time()
   speakers    String
 
-  organizers    Organizer[]
+  organizers     Organizer[]
   event_schedule EventSchedule[]
 
   @@map("events")
@@ -202,8 +202,8 @@ model EventSchedule {
   event_id    Int
   schedule_id Int
 
-  event      Event    @relation(fields: [event_id], references: [id])
-  schedule   Schedule @relation(fields: [schedule_id], references: [id])
+  event    Event    @relation(fields: [event_id], references: [id])
+  schedule Schedule @relation(fields: [schedule_id], references: [id])
 
   @@map("event_schedule")
 }
@@ -213,7 +213,7 @@ model Schedule {
   year   String
   period String
 
-  registers Register[]
+  registers      Register[]
   event_schedule EventSchedule[]
 
   @@map("schedule")
