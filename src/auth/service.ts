@@ -81,3 +81,21 @@ function generateToken(sub: number) {
     expiresIn: "2 days",
   });
 }
+
+export const logoutUser = async (userId: number, token: string) => {
+  try {
+    const hashedToken = await hash(token, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        blacklistTokens: {
+          push: hashedToken,
+        },
+      },
+    });
+    console.log("Token added to user blacklist: ", hashedToken);
+  } catch (e) {
+    console.log("Could not add token to user blacklist", e);
+    throw e;
+  }
+};
