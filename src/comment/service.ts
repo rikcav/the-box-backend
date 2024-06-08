@@ -1,4 +1,10 @@
 import * as commentRepository from "./repository";
+interface CreateCommentDto {
+  body: string;
+  user_id: number;
+  post_id: number;
+};
+
 
 export const deleteById = async (id: number) => {
   try {
