@@ -31,17 +31,30 @@ export const getPostsByCategory = async (
     res.status(200).send(posts);
   } catch (error) {
     console.log(error);
-    res.status(400).send();
+
+    if (error instanceof ZodError) {
+      res.status(400).send({ message: "Validation failed", errors: error });
+    }
+
+    res.status(404).send({ message: "Could not get posts", errors: error });
   }
 };
 
 export const getPost = async (req: express.Request, res: express.Response) => {
   try {
     const post = await postService.getPost(Number(req.params.id));
-    res.status(200).send(post);
+    if (post) {
+      res.status(200).send(post);
+    }
+
+    res.status(404).send({ message: "Post not found" });
   } catch (error) {
-    console.log(error);
-    res.status(400).send({ message: "Could get post", error });
+    if (error instanceof ZodError) {
+      res.status(400).send({ message: "Validation failed", errors: error });
+    } else {
+      console.log(error);
+      res.status(400).send({ message: "Could get post", error });
+    }
   }
 };
 
