@@ -17,3 +17,19 @@ export const deleteById = async (id: number) => {
 
   return comment;
 };
+
+export const listComment = async (
+  skip: number,
+  take: number,
+  order: "asc" | "desc"
+) => {
+  return await prisma.comment.findMany({
+    skip,
+    take,
+    include: {
+      user: { select: { name: true } },
+      _count: { select: { like: true } },
+    },
+    orderBy: { like: { _count: order } },
+  });
+};
