@@ -53,23 +53,24 @@ export const listComments = async (
       .optional()
       .default("desc"),
   });
+
+  const userIdSchema = z.object({
+    userId: z.coerce.number().int(),
+  });
+  
   try {
+    const { userId } = userIdSchema.parse(request.body);
     const { page, sizePage, order } = listCommentsSchema.parse(request.query);
 
-    const comments = await commentService.listComments(page, sizePage, order);
-
-    const content = comments.map(
-      ({ _count, created_at, post_id, user_id, ...rest }) => ({
-        likes: _count,
-        createdAt: created_at,
-        postId: post_id,
-        userId: user_id,
-        ...rest,
-      })
+    const comments = await commentService.listComments(
+      page,
+      sizePage,
+      order,
+      userId
     );
 
     return response.status(200).send({
-      content,
+      comments,
     });
   } catch (error) {
     if (error instanceof ZodError) {

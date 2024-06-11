@@ -21,12 +21,18 @@ export const deleteById = async (id: number) => {
 export const listComment = async (
   skip: number,
   take: number,
-  order: "asc" | "desc"
+  order: "asc" | "desc",
+  userId: number
 ) => {
   return await prisma.comment.findMany({
     skip,
     take,
     include: {
+      like: {
+        where: {
+          user_id: userId,
+        },
+      },
       user: { select: { name: true } },
       _count: { select: { like: true } },
     },

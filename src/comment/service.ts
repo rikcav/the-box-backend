@@ -1,4 +1,3 @@
-import { z } from "zod";
 import * as commentRepository from "./repository";
 import { commentValidation } from "./validation";
 
@@ -30,26 +29,30 @@ export const deleteById = async (id: number) => {
   }
 };
 
-export const listComments = async (page: number, sizePage: number, order: "asc" | "desc") => {
+export const listComments = async (
+  page: number,
+  sizePage: number,
+  order: "asc" | "desc",
+  userId: number
+) => {
   const skip = (page - 1) * sizePage;
 
-  const comments = await commentRepository.listComment(skip, sizePage, order);
-
-  const commentsSchema = z.array(
-    z.object({
-      id: z.number(),
-      body: z.string(),
-      created_at: z.date(),
-      user_id: z.number(),
-      post_id: z.number(),
-      user: z.object({ name: z.string() }).transform((obj) => obj.name),
-      _count: z
-        .object({
-          like: z.number(),
-        })
-        .transform((count) => count.like),
-    })
+  const comments = await commentRepository.listComment(
+    skip,
+    sizePage,
+    order,
+    userId
   );
 
-  return  commentsSchema.parse(comments);
+  return comments.map(
+    ({ _count, created_at, post_id, user_id, user, like, ...rest }) => ({
+      likes: _count.like,
+      createdAt: created_at,
+      postId: post_id,
+      user: user.name,
+      userId: user_id,
+      liked: !!like.length,
+      ...rest,
+    })
+  );
 };
