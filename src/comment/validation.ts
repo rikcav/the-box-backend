@@ -8,5 +8,5 @@ export const commentValidation = z.object({
 
 export const commentUpdateValidation = z.object({
   id: z.number(),
-  body: z.string().min(1),
+  body: z.string().min(1, "Body cannot be empty."),
 });
