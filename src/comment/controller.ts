@@ -41,8 +41,15 @@ export const updateById = async (
   res: express.Response
 ) => {
   try {
-    const updataCommentDto = {id: Number(req.params.id), body: String(req.body.body)};
-    const comment = await commentService.updateById(updataCommentDto);
+    const id = Number(req.params.id);
+    const body = req.body.body;
+
+    if (!body || typeof body !== 'string' || body.trim().length === 0) {
+      return res.status(400).send({ message: "Body is required and cannot be empty." });
+    }
+
+    const updateCommentDto = { id, body: String(body).trim() };
+    const comment = await commentService.updateById(updateCommentDto);
 
     res.status(200).send({ message: "Updated comment!", comment });
   } catch (error) {
