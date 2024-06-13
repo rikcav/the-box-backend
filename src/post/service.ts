@@ -9,6 +9,48 @@ interface CreatePostDto {
   user_id: number;
 }
 
+export const getPosts = async (page: number, size: number) => {
+  try {
+    const skip = (page - 1) * size;
+    const take = size;
+
+    const posts = await postRepository.getPosts(skip, take);
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getPostsByCategory = async (
+  category: PostCategoryEnum,
+  page: number,
+  size: number,
+) => {
+  try {
+    const skip = (page - 1) * size;
+    const take = size;
+
+    const posts = await postRepository.getPostsByCategory(category, skip, take);
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getPost = async (id: number) => {
+  try {
+    const post = await postRepository.getPost(id);
+    return post;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const createPost = async (postData: CreatePostDto) => {
   try {
     const data = postValidation.parse(postData);
