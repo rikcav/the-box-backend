@@ -11,7 +11,7 @@ export const createNewComment = async (
     const createCommentDTO = req.body;
     const comment = await commentService.createComment(createCommentDTO);
 
-    res.status(200).send({ message: "Commented!", comment })
+    res.status(200).send({ message: "Commented!", comment });
   } catch (error) {
     console.log(error);
 
@@ -34,6 +34,33 @@ export const deleteById = async (
   } catch (error) {
     console.log(error);
     res.status(404).send({ message: "Comment not found.", errors: error });
+  }
+};
+
+export const updateById = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const id = Number(req.params.id);
+    const body = req.body.body;
+
+    if (!body || typeof body !== 'string' || body.trim().length === 0) {
+      return res.status(400).send({ message: "Body is required and cannot be empty." });
+    }
+
+    const updateCommentDto = { id, body: String(body).trim() };
+    const comment = await commentService.updateById(updateCommentDto);
+
+    res.status(200).send({ message: "Updated comment!", comment });
+  } catch (error) {
+    console.log(error);
+
+    if (error instanceof ZodError){
+      res.status(400).send({ mensage: "Validation failed.", errors: error});
+    } else {
+      res.status(400).send({ mensage: "Could not update a comment.", errors: error});
+    }
   }
 };
 
