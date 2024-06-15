@@ -7,7 +7,11 @@ export const getById = async (id: number) => {
     },
   });
 
-  return user;
+  if (user) {
+    return user;
+  }
+
+  throw "Could not find user with ID: " + id;
 };
 
 export const createUser = async (data: any) => {
