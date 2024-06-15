@@ -7,11 +7,24 @@ export const getById = async (id: number) => {
     },
   });
 
+  if (user) {
+    return user;
+  }
+
+  throw "Could not find user with ID: " + id;
+};
+
+export const createUser = async (data: any) => {
+  const user = await prisma.user.create({
+    data,
+  });
+
   return user;
 };
 
-export const createUser = async (data: object) => {
-  const user = await prisma.user.create({
+export const updateUser = async (id: number, data: any) => {
+  const user = await prisma.user.update({
+    where: { id },
     data,
   });
 

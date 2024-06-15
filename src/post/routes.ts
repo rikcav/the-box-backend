@@ -1,6 +1,9 @@
 import express from "express";
-import { createNewPost } from "./controller";
+import * as postController from "./controller";
 
 export const postRoutes = (app: express.Application) => {
-  app.post("/post", createNewPost);
+  app.get("/post", postController.getPosts);
+  app.get("/post/category/:category", postController.getPostsByCategory);
+  app.get("/post/:id", postController.getPost);
+  app.post("/post", postController.createPost);
 };
