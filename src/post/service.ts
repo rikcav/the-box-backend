@@ -1,5 +1,6 @@
 import { PostCategoryEnum } from "@prisma/client";
 import * as postRepository from "./repository";
+import { SortingOrder } from "./repository";
 import { postValidation } from "./validation";
 
 interface CreatePostDto {
@@ -9,12 +10,16 @@ interface CreatePostDto {
   user_id: number;
 }
 
-export const getPosts = async (page: number, size: number) => {
+export const getPosts = async (
+  page: number,
+  size: number,
+  order: SortingOrder,
+) => {
   try {
     const skip = (page - 1) * size;
     const take = size;
 
-    const posts = await postRepository.getPosts(skip, take);
+    const posts = await postRepository.getPosts(skip, take, order);
 
     return posts;
   } catch (error) {
@@ -27,12 +32,18 @@ export const getPostsByCategory = async (
   category: PostCategoryEnum,
   page: number,
   size: number,
+  order: SortingOrder,
 ) => {
   try {
     const skip = (page - 1) * size;
     const take = size;
 
-    const posts = await postRepository.getPostsByCategory(category, skip, take);
+    const posts = await postRepository.getPostsByCategory(
+      category,
+      skip,
+      take,
+      order,
+    );
 
     return posts;
   } catch (error) {
