@@ -17,3 +17,14 @@ export const deleteById = async (id: number) => {
 
   return comment;
 };
+
+export const updateById = async (id: number, data: any) => {
+  const comment = await prisma.comment.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return comment;
+};

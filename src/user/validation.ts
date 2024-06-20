@@ -17,3 +17,9 @@ export const userValidation = z.object({
       );
     }),
 });
+
+export const updateUserValidation = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  phone: z.string().min(11).max(11),
+});

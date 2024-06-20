@@ -8,8 +8,14 @@ export const getPosts = async (req: express.Request, res: express.Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const size = parseInt(req.query.size as string) || 10;
 
-    const posts = await postService.getPosts(page, size);
+    if (req.query.order === "asc") {
+      const order = "asc";
+      const posts = await postService.getPosts(page, size, order);
+      res.status(200).send(posts);
+    }
 
+    const order = "desc";
+    const posts = await postService.getPosts(page, size, order);
     res.status(200).send(posts);
   } catch (error) {
     console.log(error);
@@ -26,8 +32,24 @@ export const getPostsByCategory = async (
     const page = parseInt(req.query.page as string) || 1;
     const size = parseInt(req.query.size as string) || 10;
 
-    const posts = await postService.getPostsByCategory(category, page, size);
+    if (req.query.order === "asc") {
+      const order = "asc";
+      const posts = await postService.getPostsByCategory(
+        category,
+        page,
+        size,
+        order,
+      );
+      res.status(200).send(posts);
+    }
 
+    const order = "desc";
+    const posts = await postService.getPostsByCategory(
+      category,
+      page,
+      size,
+      order,
+    );
     res.status(200).send(posts);
   } catch (error) {
     console.log(error);
