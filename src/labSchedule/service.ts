@@ -38,6 +38,10 @@ export const create = async (labScheduleData: CreateLabSchedule) => {
 
 export const update = async (id: number, lSData: CreateLabSchedule) => {
   try {
+    lSData.start_time = new Date(lSData.start_time);
+    lSData.end_time = new Date(lSData.end_time);
+    lSData.date = new Date(lSData.date);
+
     const user = await userService.getUserById(lSData.user_id);
     if (user?.profile === "SUPER_USER") {
       const data = validation.parse(lSData);
