@@ -30,7 +30,7 @@ model User {
   name            String
   email           String      @unique
   password        String
-  profile         ProfileEnum
+  profile         ProfileEnum @default(USER)
   phone           String
   blacklistTokens String[]    @default([])
 
