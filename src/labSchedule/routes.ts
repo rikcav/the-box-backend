@@ -4,4 +4,5 @@ import * as controller from "./controller";
 export const labSchedulesRoutes = (app: express.Application) => {
   app.get("/labschedules", controller.getAllLabs);
   app.get("/labschedules/:id", controller.getLabScheduleById);
+  app.put("/labschedules/:id", controller.update);
 };
