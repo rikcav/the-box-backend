@@ -21,3 +21,15 @@ export const getLabScheduleById = async (req: express.Request, res: express.Resp
   }
 };
 
+export const update = async (req: express.Request, res: express.Response) => {
+  try {
+    const lab = await labScheduleService.update(parseInt(req.params.id), req.body);
+    console.log("Lab updated: ", lab);
+    res.status(204).send();
+  } catch (error) {
+    if (error instanceof ZodError) {
+      res.status(400).send({ message: "Validation error: ", error: error.errors });
+    }
+    res.status(400).send({ message: "Could not update lab: ", error: error });
+  }
+};
