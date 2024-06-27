@@ -2,6 +2,19 @@ import * as lSRepository from "./repository";
 import { CreateLabSchedule } from "./repository";
 import * as userService from "../user/service";
 import { validation } from "./validation";
+import { ZodDate, ZodDateCheck } from "zod";
+import dayjs from "dayjs";
+import * as LabScheduleRepository from "./repository";
+import { ConflictException } from "../errors/conflict-exception";
+
+ZodDate;
+interface LabScheduleDto {
+  startTime: dayjs.Dayjs;
+  endTime: dayjs.Dayjs;
+  date: dayjs.Dayjs;
+  userId: number;
+  labId: number;
+}
 
 export const getAll = async () => {
   try {
@@ -21,19 +34,55 @@ export const get = async (id: number) => {
   }
 };
 
-export const create = async (labScheduleData: CreateLabSchedule) => {
-  try {
-    const user = await userService.getUserById(labScheduleData.user_id);
-    if (user?.profile === "SUPER_USER") {
-      const data = validation.parse(labScheduleData);
-      const labSchedule = await lSRepository.create(data);
-      return labSchedule;
-    } else {
-      throw new Error(`Only a SUPER_USER can create a lab schedule`);
-    }
-  } catch (error) {
-    throw error;
+export const createLabSchedule = async ({
+  startTime,
+  endTime,
+  date,
+  labId,
+  userId,
+}: LabScheduleDto) => {
+  if (startTime.add(30, "millisecond").isBefore(endTime)) {
+    throw new ConflictException("Very little time, put at least 30 minutes!");
   }
+
+  if (
+    !(
+      (startTime.isAfter("07:30:00") && startTime.isBefore("12:00:00")) ||
+      (startTime.isAfter("13:30:00") && startTime.isBefore("21:00:00")) ||
+      !(
+        (endTime.isBefore("08:00:00") && endTime.isAfter("12:30:00")) ||
+        (endTime.isBefore("14:00:00") && endTime.isAfter("21:30:00"))
+      )
+    )
+  ) {
+    throw new ConflictException("Invalid schedules!");
+  }
+  const conflictSchedule = await LabScheduleRepository.findScheduleDate(
+    labId,
+    date.toDate(),
+    startTime.toDate(),
+    endTime.toDate()
+  );
+
+  if (conflictSchedule.length) {
+    throw new ConflictException("Conflict of schedules!");
+  }
+
+  const labSchedule = await LabScheduleRepository.create({
+    date: date.toDate(),
+    end_time: endTime.toDate(),
+    lab_id: labId,
+    start_time: startTime.toDate(),
+    user_id: userId,
+  });
+
+  return {
+    id: labSchedule.id,
+    labId,
+    date: date.toDate(),
+    startTime: startTime.toDate(),
+    endTime: endTime.toDate(),
+  };
 };
 
 export const update = async (id: number, lSData: CreateLabSchedule) => {

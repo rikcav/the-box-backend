@@ -5,6 +5,7 @@ import { commentRoutes } from "./comment/routes";
 import { userRoutes } from "./user/routes";
 import { scheduleRoutes } from "./schedule/routes";
 import { labRoutes } from "./lab/routes";
+import { labSheduleRoutes } from "./labSchedule/routes";
 
 module.exports = (app: express.Application) => {
   authRoutes(app);
@@ -12,5 +13,6 @@ module.exports = (app: express.Application) => {
   commentRoutes(app);
   userRoutes(app);
   scheduleRoutes(app);
+  labSheduleRoutes(app);
   labRoutes(app);
 };
