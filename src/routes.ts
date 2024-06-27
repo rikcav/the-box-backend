@@ -6,6 +6,7 @@ import { userRoutes } from "./user/routes";
 import { scheduleRoutes } from "./schedule/routes";
 import { labRoutes } from "./lab/routes";
 import { labSheduleRoutes } from "./labSchedule/routes";
+import { eventsRoutes } from "./event/routes";
 
 module.exports = (app: express.Application) => {
   authRoutes(app);
@@ -15,4 +16,5 @@ module.exports = (app: express.Application) => {
   scheduleRoutes(app);
   labSheduleRoutes(app);
   labRoutes(app);
+  eventsRoutes(app);
 };
