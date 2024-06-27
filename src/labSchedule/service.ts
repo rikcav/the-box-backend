@@ -41,6 +41,11 @@ export const createLabSchedule = async ({
   labId,
   userId,
 }: LabScheduleDto) => {
+
+  if(date.day() == 0 || date.day() == 6) {
+    throw new ConflictException("weekend bookings are not allowed!");
+  }
+  
   if (startTime.add(30, "millisecond").isBefore(endTime)) {
     throw new ConflictException("Very little time, put at least 30 minutes!");
   }
