@@ -32,7 +32,7 @@ export const get = async (id: number) => {
   throw `Could not find event with id: ${id}`;
 };
 
-export const create = async (id: number, data: Event) => {
+export const create = async (data: Event) => {
   const event = await prisma.event.create({
     data,
   });
@@ -41,7 +41,7 @@ export const create = async (id: number, data: Event) => {
     return event;
   }
 
-  throw `Could not update event with id: ${id}`;
+  throw `Could not create new event`;
 };
 
 export const update = async (id: number, data: Event) => {
