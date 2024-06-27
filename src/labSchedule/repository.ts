@@ -64,6 +64,7 @@ export const findScheduleDate = async (
         {
           start_time: { gte: startTime, lte: endTime },
           end_time: { gte: startTime, lte: endTime },
+          AND: {start_time: {lte:startTime}, end_time: {lte: endTime}}
         },
       ],
     },
