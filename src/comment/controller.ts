@@ -37,6 +37,58 @@ export const deleteById = async (
   }
 };
 
+export const listComments = async (
+  request: express.Request,
+  response: express.Response
+) => {
+  const listCommentsSchema = z.object({
+    page: z.coerce.number().int("Page must be positive!").optional().default(1),
+    sizePage: z.coerce
+      .number()
+      .int("SizePage must be positive!")
+      .optional()
+      .default(10),
+    order: z
+      .enum(["asc", "desc"], { message: "Order must be asc or des!" })
+      .optional()
+      .default("desc"),
+  });
+
+  const userIdSchema = z.object({
+    userId: z.coerce.number().int(),
+  });
+  
+  try {
+    const { userId } = userIdSchema.parse(request.body);
+    const { page, sizePage, order } = listCommentsSchema.parse(request.query);
+
+    const comments = await commentService.listComments(
+      page,
+      sizePage,
+      order,
+      userId
+    );
+
+    return response.status(200).send({
+      comments,
+    });
+    } catch (error) {
+    if (error instanceof ZodError) {
+      return response.status(422).send({
+        message: "Validation error.",
+        issues: error.format(),
+      });
+    }
+
+    if (error instanceof HttpException) {
+      return response.status(error.status).send({ message: error.message });
+    }
+
+    console.error(error);
+    return response.status(500).send({ message: "Internal server error." });
+  }
+};
+
 export const updateById = async (
   req: express.Request,
   res: express.Response

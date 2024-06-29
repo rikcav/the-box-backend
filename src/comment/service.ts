@@ -36,6 +36,34 @@ export const deleteById = async (id: number) => {
   }
 };
 
+export const listComments = async (
+  page: number,
+  sizePage: number,
+  order: "asc" | "desc",
+  userId: number
+) => {
+  const skip = (page - 1) * sizePage;
+
+  const comments = await commentRepository.listComment(
+    skip,
+    sizePage,
+    order,
+    userId
+  );
+
+  return comments.map(
+    ({ _count, created_at, post_id, user_id, user, like, ...rest }) => ({
+      likes: _count.like,
+      createdAt: created_at,
+      postId: post_id,
+      user: user.name,
+      userId: user_id,
+      liked: !!like.length,
+      ...rest,
+    })
+  );
+};
+
 export const updateById = async (dataUpdateCommnent: UpdateCommentDto) => {
   try {
     const data = commentUpdateValidation.parse(dataUpdateCommnent)
