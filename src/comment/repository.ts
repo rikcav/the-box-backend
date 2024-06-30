@@ -39,13 +39,13 @@ export const listComment = async (
     orderBy: { like: { _count: order } },
   });
 
-export const updateById = async (id: number, data: any) => {
-  const comment = await prisma.comment.update({
-    where: {
-      id,
-    },
-    data,
-  });
+  export const updateById = async (id: number, data: any) => {
+    const comment = await prisma.comment.update({
+      where: {
+        id,
+      },
+      data,
+    });
 
-  return comment;
+    return comment;
 };

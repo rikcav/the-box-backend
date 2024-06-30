@@ -7,12 +7,12 @@ interface CreateCommentDto {
   body: string;
   user_id: number;
   post_id: number;
-};
+}
 
 interface UpdateCommentDto {
   id: number;
   body: string;
-};
+}
 
 export const createComment = async (dataCommnent: CreateCommentDto) => {
   try {
@@ -66,8 +66,10 @@ export const listComments = async (
 
 export const updateById = async (dataUpdateCommnent: UpdateCommentDto) => {
   try {
-    const data = commentUpdateValidation.parse(dataUpdateCommnent)
-    const comment = await commentRepository.updateById(data.id, {body: data.body});
+    const data = commentUpdateValidation.parse(dataUpdateCommnent);
+    const comment = await commentRepository.updateById(data.id, {
+      body: data.body,
+    });
 
     return comment;
   } catch (error) {

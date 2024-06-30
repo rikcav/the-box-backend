@@ -16,9 +16,11 @@ export const createNewComment = async (
     console.log(error);
 
     if (error instanceof ZodError) {
-      res.status(400).send({ mensage: "Validation failed.", errors: error});
+      res.status(400).send({ mensage: "Validation failed.", errors: error });
     } else {
-      res.status(400).send({ message: "Could not create a comment.", errors: error});
+      res
+        .status(400)
+        .send({ message: "Could not create a comment.", errors: error });
     }
   }
 };
@@ -57,7 +59,7 @@ export const listComments = async (
   const userIdSchema = z.object({
     userId: z.coerce.number().int(),
   });
-  
+
   try {
     const { userId } = userIdSchema.parse(request.body);
     const { page, sizePage, order } = listCommentsSchema.parse(request.query);
@@ -72,7 +74,7 @@ export const listComments = async (
     return response.status(200).send({
       comments,
     });
-    } catch (error) {
+  } catch (error) {
     if (error instanceof ZodError) {
       return response.status(422).send({
         message: "Validation error.",
@@ -97,8 +99,10 @@ export const updateById = async (
     const id = Number(req.params.id);
     const body = req.body.body;
 
-    if (!body || typeof body !== 'string' || body.trim().length === 0) {
-      return res.status(400).send({ message: "Body is required and cannot be empty." });
+    if (!body || typeof body !== "string" || body.trim().length === 0) {
+      return res
+        .status(400)
+        .send({ message: "Body is required and cannot be empty." });
     }
 
     const updateCommentDto = { id, body: String(body).trim() };
@@ -108,10 +112,12 @@ export const updateById = async (
   } catch (error) {
     console.log(error);
 
-    if (error instanceof ZodError){
-      res.status(400).send({ mensage: "Validation failed.", errors: error});
+    if (error instanceof ZodError) {
+      res.status(400).send({ mensage: "Validation failed.", errors: error });
     } else {
-      res.status(400).send({ mensage: "Could not update a comment.", errors: error});
+      res
+        .status(400)
+        .send({ mensage: "Could not update a comment.", errors: error });
     }
   }
 };
