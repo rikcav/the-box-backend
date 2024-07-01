@@ -5,7 +5,7 @@ import { HttpException } from "../errors/http-exception";
 
 export const createNewComment = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   try {
     const createCommentDTO = req.body;
@@ -16,16 +16,18 @@ export const createNewComment = async (
     console.log(error);
 
     if (error instanceof ZodError) {
-      res.status(400).send({ mensage: "Validation failed.", errors: error});
+      res.status(400).send({ mensage: "Validation failed.", errors: error });
     } else {
-      res.status(400).send({ message: "Could not create a comment.", errors: error});
+      res
+        .status(400)
+        .send({ message: "Could not create a comment.", errors: error });
     }
   }
 };
 
 export const deleteById = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   try {
     const comment = await commentService.deleteById(parseInt(req.params.id));
@@ -39,7 +41,7 @@ export const deleteById = async (
 
 export const listComments = async (
   request: express.Request,
-  response: express.Response
+  response: express.Response,
 ) => {
   const listCommentsSchema = z.object({
     page: z.coerce.number().int("Page must be positive!").optional().default(1),
@@ -57,7 +59,7 @@ export const listComments = async (
   const userIdSchema = z.object({
     userId: z.coerce.number().int(),
   });
-  
+
   try {
     const { userId } = userIdSchema.parse(request.body);
     const { page, sizePage, order } = listCommentsSchema.parse(request.query);
@@ -66,13 +68,67 @@ export const listComments = async (
       page,
       sizePage,
       order,
-      userId
+      userId,
     );
 
     return response.status(200).send({
       comments,
     });
-    } catch (error) {
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return response.status(422).send({
+        message: "Validation error.",
+        issues: error.format(),
+      });
+    }
+
+    if (error instanceof HttpException) {
+      return response.status(error.status).send({ message: error.message });
+    }
+
+    console.error(error);
+    return response.status(500).send({ message: "Internal server error." });
+  }
+};
+
+export const listCommentsByPostId = async (
+  request: express.Request,
+  response: express.Response,
+) => {
+  const listCommentsSchema = z.object({
+    page: z.coerce.number().int("Page must be positive!").optional().default(1),
+    sizePage: z.coerce
+      .number()
+      .int("SizePage must be positive!")
+      .optional()
+      .default(10),
+    order: z
+      .enum(["asc", "desc"], { message: "Order must be asc or des!" })
+      .optional()
+      .default("desc"),
+  });
+
+  const listCommentsByPostSchema = z.object({
+    userId: z.coerce.number().int(),
+    postId: z.coerce.number().int(),
+  });
+
+  try {
+    const { userId, postId } = listCommentsByPostSchema.parse(request.body);
+    const { page, sizePage, order } = listCommentsSchema.parse(request.query);
+
+    const comments = await commentService.listCommentsByPostId(
+      page,
+      sizePage,
+      order,
+      userId,
+      postId,
+    );
+
+    return response.status(200).send({
+      comments,
+    });
+  } catch (error) {
     if (error instanceof ZodError) {
       return response.status(422).send({
         message: "Validation error.",
@@ -91,14 +147,16 @@ export const listComments = async (
 
 export const updateById = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   try {
     const id = Number(req.params.id);
     const body = req.body.body;
 
-    if (!body || typeof body !== 'string' || body.trim().length === 0) {
-      return res.status(400).send({ message: "Body is required and cannot be empty." });
+    if (!body || typeof body !== "string" || body.trim().length === 0) {
+      return res
+        .status(400)
+        .send({ message: "Body is required and cannot be empty." });
     }
 
     const updateCommentDto = { id, body: String(body).trim() };
@@ -108,17 +166,19 @@ export const updateById = async (
   } catch (error) {
     console.log(error);
 
-    if (error instanceof ZodError){
-      res.status(400).send({ mensage: "Validation failed.", errors: error});
+    if (error instanceof ZodError) {
+      res.status(400).send({ mensage: "Validation failed.", errors: error });
     } else {
-      res.status(400).send({ mensage: "Could not update a comment.", errors: error});
+      res
+        .status(400)
+        .send({ mensage: "Could not update a comment.", errors: error });
     }
   }
 };
 
 export const likeCommentController = async (
   request: express.Request,
-  response: express.Response
+  response: express.Response,
 ) => {
   const commentIdSchema = z.object({
     id: z.coerce.number().int("Invalid id!"),
