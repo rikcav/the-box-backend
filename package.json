@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
+    "swagger": "ts-node src/swagger/swagger.ts",
     "test": "jest"
   },
   "keywords": [],
@@ -16,6 +17,7 @@
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
     "prisma": "^5.13.0",
+    "swagger-autogen": "^2.23.7",
     "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
@@ -24,11 +26,15 @@
   "dependencies": {
     "@prisma/client": "^5.13.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/body-parser": "^1.19.5",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/swagger-ui-express": "^4.1.6",
     "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "swagger-ui-express": "^5.0.1"
   }
 }
