@@ -20,7 +20,7 @@ export const listEvents = async (
     });
   
     try {
-      const { startDate, endDate } = listEventsSchema.parse(request.params);
+      const { startDate, endDate } = listEventsSchema.parse(request.query);
   
       const events = await service.listEvents(startDate, endDate);
   
