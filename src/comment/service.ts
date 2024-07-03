@@ -40,7 +40,7 @@ export const listComments = async (
   page: number,
   sizePage: number,
   order: "asc" | "desc",
-  userId: number
+  userId: number,
 ) => {
   const skip = (page - 1) * sizePage;
 
@@ -48,7 +48,7 @@ export const listComments = async (
     skip,
     sizePage,
     order,
-    userId
+    userId,
   );
 
   return comments.map(
@@ -60,7 +60,37 @@ export const listComments = async (
       userId: user_id,
       liked: !!like.length,
       ...rest,
-    })
+    }),
+  );
+};
+
+export const listCommentsByPostId = async (
+  page: number,
+  sizePage: number,
+  order: "asc" | "desc",
+  userId: number,
+  postId: number,
+) => {
+  const skip = (page - 1) * sizePage;
+
+  const comments = await commentRepository.listCommentByPostId(
+    skip,
+    sizePage,
+    order,
+    userId,
+    postId,
+  );
+
+  return comments.map(
+    ({ _count, created_at, post_id, user_id, user, like, ...rest }) => ({
+      likes: _count.like,
+      createdAt: created_at,
+      postId: post_id,
+      user: user.name,
+      userId: user_id,
+      liked: !!like.length,
+      ...rest,
+    }),
   );
 };
 

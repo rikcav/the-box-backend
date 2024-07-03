@@ -22,7 +22,7 @@ export const listComment = async (
   skip: number,
   take: number,
   order: "asc" | "desc",
-  userId: number,
+  userId: number
 ) => {
   return await prisma.comment.findMany({
     skip,
@@ -40,13 +40,37 @@ export const listComment = async (
   });
 };
 
-  export const updateById = async (id: number, data: any) => {
-    const comment = await prisma.comment.update({
-      where: {
-        id,
+export const listCommentByPostId = async (
+  skip: number,
+  take: number,
+  order: "asc" | "desc",
+  userId: number,
+  postId: number
+) => {
+  return await prisma.comment.findMany({
+    where: { post_id: postId },
+    skip,
+    take,
+    include: {
+      like: {
+        where: {
+          user_id: userId,
+        },
       },
-      data,
-    });
+      user: { select: { name: true } },
+      _count: { select: { like: true } },
+    },
+    orderBy: { like: { _count: order } },
+  });
+};
 
-    return comment;
+export const updateById = async (id: number, data: any) => {
+  const comment = await prisma.comment.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return comment;
 };
