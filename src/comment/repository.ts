@@ -44,22 +44,12 @@ export const listCommentByPostId = async (
   skip: number,
   take: number,
   order: "asc" | "desc",
-  userId: number,
   postId: number,
 ) => {
   return await prisma.comment.findMany({
     where: { post_id: postId },
     skip,
     take,
-    include: {
-      like: {
-        where: {
-          user_id: userId,
-        },
-      },
-      user: { select: { name: true } },
-      _count: { select: { like: true } },
-    },
     orderBy: { like: { _count: order } },
   });
 };
