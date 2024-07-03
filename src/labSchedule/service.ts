@@ -21,6 +21,15 @@ export const get = async (id: number) => {
   }
 };
 
+export const getByLabId = async (labId: number) => {
+  try {
+    const labSchedules = await lSRepository.getByLabId(labId);
+    return labSchedules;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const create = async (labScheduleData: CreateLabSchedule) => {
   try {
     const user = await userService.getUserById(labScheduleData.user_id);
