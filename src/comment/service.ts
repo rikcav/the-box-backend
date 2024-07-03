@@ -68,7 +68,6 @@ export const listCommentsByPostId = async (
   page: number,
   sizePage: number,
   order: "asc" | "desc",
-  userId: number,
   postId: number,
 ) => {
   const skip = (page - 1) * sizePage;
@@ -77,21 +76,10 @@ export const listCommentsByPostId = async (
     skip,
     sizePage,
     order,
-    userId,
     postId,
   );
 
-  return comments.map(
-    ({ _count, created_at, post_id, user_id, user, like, ...rest }) => ({
-      likes: _count.like,
-      createdAt: created_at,
-      postId: post_id,
-      user: user.name,
-      userId: user_id,
-      liked: !!like.length,
-      ...rest,
-    }),
-  );
+  return comments;
 };
 
 export const updateById = async (dataUpdateCommnent: UpdateCommentDto) => {

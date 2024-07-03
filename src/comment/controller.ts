@@ -108,20 +108,14 @@ export const listCommentsByPostId = async (
       .default("desc"),
   });
 
-  const listCommentsByPostSchema = z.object({
-    userId: z.coerce.number().int(),
-    postId: z.coerce.number().int(),
-  });
-
   try {
-    const { userId, postId } = listCommentsByPostSchema.parse(request.body);
+    const postId = parseInt(request.params.postid);
     const { page, sizePage, order } = listCommentsSchema.parse(request.query);
 
     const comments = await commentService.listCommentsByPostId(
       page,
       sizePage,
       order,
-      userId,
       postId,
     );
 
