@@ -21,6 +21,16 @@ export const getLabScheduleById = async (req: express.Request, res: express.Resp
   }
 };
 
+export const getLabSchedulesByLabId = async (req: express.Request, res: express.Response) => {
+  try {
+    const labId = parseInt(req.params.id);
+    const labSchedules = await labScheduleService.getByLabId(labId);
+    res.status(200).json(labSchedules);
+  } catch (error) {
+    res.status(400).json({ message: "Could not get lab schedules", error: error });
+  }
+};
+
 export const update = async (req: express.Request, res: express.Response) => {
   try {
     const lab = await labScheduleService.update(parseInt(req.params.id), req.body);
