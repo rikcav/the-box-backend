@@ -1,5 +1,6 @@
 import { PostCategoryEnum } from "@prisma/client";
 import * as postRepository from "./repository";
+import { getUserById } from "../user/service";
 import { SortingOrder } from "./repository";
 import { postValidation } from "./validation";
 
@@ -20,8 +21,15 @@ export const getPosts = async (
     const take = size;
 
     const posts = await postRepository.getPosts(skip, take, order);
+    const userPromises = posts.map((post) => getUserById(post.user_id));
+    const users = await Promise.all(userPromises);
 
-    return posts;
+    const fullPosts = posts.map((post, index) => ({
+      ...post,
+      original_poster: users[index].name,
+    }));
+
+    return fullPosts;
   } catch (error) {
     console.log(error);
     throw error;
