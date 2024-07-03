@@ -5,6 +5,10 @@ const envSchema = z.object({
     DATABASE_URL: z.string().url(),
     PORT: z.coerce.number().default(8000),
     SECRET_KEY: z.string().base64(),
+    AWS_ACCESS_KEY: z.string().optional(),
+    AWS_SECRET_KEY: z.string().optional(),
+    AWS_S3_BUCKET: z.string().optional(),
+    AWS_REGION: z.string().optional()
 })
 
 const _env = envSchema.safeParse(process.env)

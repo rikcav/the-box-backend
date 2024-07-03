@@ -1,9 +1,9 @@
 import express from "express";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import * as service from "./service";
 import { ZodError, z } from "zod";
 import { HttpException } from "../errors/http-exception";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { env } from "../env";
+
 
 export const createMaterialFormal = async (
   request: express.Request,
@@ -76,8 +76,42 @@ export const createMaterialDidatico = async (
   }
 };
 
-export const createUrlPreSign = async () => {
-//   const client = new S3Client();
-// const command = new GetObjectCommand(getObjectParams);
-// const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+export const createSignedUrl = async (
+  request: express.Request,
+  response: express.Response
+) => {
+  const { AWS_ACCESS_KEY, AWS_REGION, AWS_S3_BUCKET, AWS_SECRET_KEY } = env;
+  if (!(AWS_ACCESS_KEY && AWS_REGION && AWS_S3_BUCKET && AWS_SECRET_KEY)) {
+    return response
+      .status(423)
+      .send({ message: "resource not configured on the server!" });
+  }
+
+  const SignedUrlSchema = z.object({
+    fileType: z.enum(["pdf", "webp", "png", "jpeg", "docx", "epub"], {
+      message: "Unsupported format!",
+    }),
+  });
+
+  try {
+    const { fileType } = SignedUrlSchema.parse(request.query);
+
+    const url = await service.createSignedUrl(fileType);
+
+    return response.status(200).send({ url });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return response.status(422).send({
+        message: "Validation error.",
+        issues: error.format(),
+      });
+    }
+
+    if (error instanceof HttpException) {
+      return response.status(error.status).send({ message: error.message });
+    }
+
+    console.error(error);
+    return response.status(500).send({ message: "Internal server error." });
+  }
 };

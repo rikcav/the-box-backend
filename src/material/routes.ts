@@ -10,4 +10,5 @@ export const materialRoutes = (app: express.Application) => {
     authentication,
     controller.createMaterialDidatico
   );
+  app.post("/materialUploadUrl", authentication, controller.createSignedUrl)
 };
