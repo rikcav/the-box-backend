@@ -7,12 +7,12 @@ interface CreateCommentDto {
   body: string;
   user_id: number;
   post_id: number;
-};
+}
 
 interface UpdateCommentDto {
   id: number;
   body: string;
-};
+}
 
 export const createComment = async (dataCommnent: CreateCommentDto) => {
   try {
@@ -60,14 +60,34 @@ export const listComments = async (
       userId: user_id,
       liked: !!like.length,
       ...rest,
-    })
+    }),
   );
+};
+
+export const listCommentsByPostId = async (
+  page: number,
+  sizePage: number,
+  order: "asc" | "desc",
+  postId: number,
+) => {
+  const skip = (page - 1) * sizePage;
+
+  const comments = await commentRepository.listCommentByPostId(
+    skip,
+    sizePage,
+    order,
+    postId,
+  );
+
+  return comments;
 };
 
 export const updateById = async (dataUpdateCommnent: UpdateCommentDto) => {
   try {
-    const data = commentUpdateValidation.parse(dataUpdateCommnent)
-    const comment = await commentRepository.updateById(data.id, {body: data.body});
+    const data = commentUpdateValidation.parse(dataUpdateCommnent);
+    const comment = await commentRepository.updateById(data.id, {
+      body: data.body,
+    });
 
     return comment;
   } catch (error) {
