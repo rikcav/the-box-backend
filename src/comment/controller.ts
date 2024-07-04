@@ -41,7 +41,7 @@ export const deleteById = async (
 
 export const listComments = async (
   request: express.Request,
-  response: express.Response,
+  response: express.Response
 ) => {
   const listCommentsSchema = z.object({
     page: z.coerce.number().int("Page must be positive!").optional().default(1),
@@ -59,7 +59,6 @@ export const listComments = async (
   const userIdSchema = z.object({
     userId: z.coerce.number().int(),
   });
-
   try {
     const { userId } = userIdSchema.parse(request.body);
     const { page, sizePage, order } = listCommentsSchema.parse(request.query);
@@ -68,7 +67,7 @@ export const listComments = async (
       page,
       sizePage,
       order,
-      userId,
+      userId
     );
 
     return response.status(200).send({

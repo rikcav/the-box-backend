@@ -40,7 +40,7 @@ export const listComments = async (
   page: number,
   sizePage: number,
   order: "asc" | "desc",
-  userId: number,
+  userId: number
 ) => {
   const skip = (page - 1) * sizePage;
 
@@ -48,7 +48,7 @@ export const listComments = async (
     skip,
     sizePage,
     order,
-    userId,
+    userId
   );
 
   return comments.map(
