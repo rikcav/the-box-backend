@@ -82,8 +82,9 @@ export const listCommentsByPostId = async (
   const userPromises = comments.map((comment) => getUserById(comment.user_id));
   const users = await Promise.all(userPromises);
 
-  const fullComments = comments.map((comment, index) => ({
-    ...comment,
+  const fullComments = comments.map(({ _count, ...rest }, index) => ({
+    ...rest,
+    likes: _count.like,
     commentator: users[index].name,
   }));
 
