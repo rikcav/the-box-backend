@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
-    "swagger": "ts-node src/swagger/swagger.ts",
+    "dev": "node src/swagger/swagger.js && ts-node src/index.ts",
     "test": "jest"
   },
   "keywords": [],
