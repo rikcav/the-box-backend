@@ -8,7 +8,14 @@ interface MaterialDto {
   title: string;
   url: string;
   description: string;
-  category: string;
+  category:
+    | "BAREMA"
+    | "REQUERIMENTO"
+    | "UNICO"
+    | "EDITAIS"
+    | "EDITAIS_DE_BOLSAS"
+    | "APOIO"
+    | "MANUAL_DOS_CALOUROS";
   type: "DIDATICO" | "FORMAL";
   userId: number;
 }

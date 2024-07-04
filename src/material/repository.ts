@@ -6,6 +6,14 @@ interface CreateMaterial {
   description: string;
   type: "DIDATICO" | "FORMAL";
   userId: number;
+  category:
+    | "BAREMA"
+    | "REQUERIMENTO"
+    | "UNICO"
+    | "EDITAIS"
+    | "EDITAIS_DE_BOLSAS"
+    | "APOIO"
+    | "MANUAL_DOS_CALOUROS";
 }
 
 export const createMaterial = async ({
@@ -13,6 +21,7 @@ export const createMaterial = async ({
   title,
   type,
   url,
+  category,
   userId,
 }: CreateMaterial) => {
   return await prisma.material.create({
@@ -21,6 +30,7 @@ export const createMaterial = async ({
       description,
       type,
       url,
+      category,
       user_id: userId,
     },
   });

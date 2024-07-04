@@ -4,7 +4,6 @@ import { ZodError, z } from "zod";
 import { HttpException } from "../errors/http-exception";
 import { env } from "../env";
 
-
 export const createMaterialFormal = async (
   request: express.Request,
   response: express.Response
@@ -14,14 +13,20 @@ export const createMaterialFormal = async (
     url: z.string().url("URL invalid!"),
     description: z.string({ message: "Description required!" }),
     userId: z.coerce.number({ message: "user invalid!" }),
-    category: z.string({ message: "category required!" }),
+    category: z.enum(
+      ["BAREMA", "REQUERIMENTO", "UNICO", "EDITAIS", "EDITAIS_DE_BOLSAS"],
+      {
+        message:
+          "category required, accepted categories BAREMA, REQUERIMENTO, UNICO, EDITAIS e EDITAIS_DE_BOLSAS!",
+      }
+    ),
   });
   try {
     const material = createMaterialSchema.parse(request.body);
 
-    const token = await service.createMaterial({ ...material, type: "FORMAL" });
+    const materialFormal = await service.createMaterial({ ...material, type: "FORMAL" });
 
-    return response.status(200).send({ token });
+    return response.status(200).send({ material: materialFormal });
   } catch (error) {
     if (error instanceof ZodError) {
       return response.status(422).send({
@@ -48,17 +53,23 @@ export const createMaterialDidatico = async (
     url: z.string().url("URL invalid!"),
     description: z.string({ message: "Description required!" }),
     userId: z.coerce.number({ message: "user invalid!" }),
-    category: z.string({ message: "category required!" }),
+    category: z.enum(
+      ["APOIO", "MANUAL_DOS_CALOUROS"],
+      {
+        message:
+          "category required, accepted categories APOIO e MANUAL_DOS_CALOUROS!",
+      }
+    ),
   });
   try {
     const material = createMaterialSchema.parse(request.body);
 
-    const token = await service.createMaterial({
+    const materialDidatico = await service.createMaterial({
       ...material,
       type: "DIDATICO",
     });
 
-    return response.status(200).send({ token });
+    return response.status(200).send({ material: materialDidatico });
   } catch (error) {
     if (error instanceof ZodError) {
       return response.status(422).send({
