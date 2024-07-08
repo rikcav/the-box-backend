@@ -27,8 +27,9 @@ export const create = async (req: express.Request, res: express.Response) => {
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(400).send({ message: "Validation error: ", error: error });
+    } else {
+      res.status(400).send({ message: "Could not create lab: ", error: error });
     }
-    res.status(400).send({ message: "Could not create lab: ", error: error });
   }
 };
 
@@ -40,8 +41,9 @@ export const update = async (req: express.Request, res: express.Response) => {
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(400).send({ message: "Validation error: ", error: error });
+    } else {
+      res.status(400).send({ message: "Could not update lab: ", error: error });
     }
-    res.status(400).send({ message: "Could not update lab: ", error: error });
   }
 };
 
