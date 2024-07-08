@@ -19,8 +19,15 @@ export const get = async (id: number) => {
   }
 };
 
-export const create = async (eventData: Event) => {
+export const create = async (eventData: repository.NewEvent) => {
   try {
+    const { start_date, end_date, start_time, end_time } = eventData;
+
+    eventData.start_date = new Date(start_date);
+    eventData.end_date = new Date(end_date);
+    eventData.start_time = new Date(start_time);
+    eventData.end_time = new Date(end_time);
+
     const validatedData = validation.parse(eventData);
     const event = await repository.create(validatedData);
     return event;
@@ -29,13 +36,20 @@ export const create = async (eventData: Event) => {
   }
 };
 
-export const update = async (id: number, eventData: Event) => {
+export const update = async (id: number, eventData: repository.NewEvent) => {
   try {
     const existingEvent = await repository.get(id);
 
     if (!existingEvent) {
       throw `Cannot find event with id: ${id}`;
     }
+
+    const { start_date, end_date, start_time, end_time } = eventData;
+
+    eventData.start_date = new Date(start_date);
+    eventData.end_date = new Date(end_date);
+    eventData.start_time = new Date(start_time);
+    eventData.end_time = new Date(end_time);
 
     const validatedData = validation.parse(eventData);
     const event = await repository.update(id, validatedData);
