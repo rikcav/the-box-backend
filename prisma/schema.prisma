@@ -26,13 +26,13 @@ enum PostCategoryEnum {
 }
 
 model User {
-  id       Int         @id @default(autoincrement())
-  name     String
-  email    String      @unique
-  password String
-  profile  ProfileEnum
-  phone    String
-  blacklistTokens String[] @default([])
+  id              Int         @id @default(autoincrement())
+  name            String
+  email           String      @unique
+  password        String
+  profile         ProfileEnum
+  phone           String
+  blacklistTokens String[]    @default([])
 
   students   Student[]
   professors Professor[]
@@ -108,7 +108,7 @@ enum TypeMaterial {
 }
 
 model labSchedule {
-  id         Int      @id
+  id         Int      @id @default(autoincrement())
   start_time DateTime @db.Time()
   end_time   DateTime @db.Time()
   date       DateTime @db.Date
@@ -229,4 +229,16 @@ model Register {
   schedule Schedule @relation(fields: [schedule_id], references: [id])
 
   @@map("registers")
+}
+
+model Establishment {
+  id             Int     @id @default(autoincrement())
+  name           String
+  type           String
+  phone          String?
+  instagram      String?
+  schedule_days  String
+  address        String
+  schedule_hours String
+  observations   String
 }
