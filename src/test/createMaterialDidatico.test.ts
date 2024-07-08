@@ -1,8 +1,6 @@
 import express from "express";
 import { createMaterialDidatico } from "../material/controller";
 import * as service from "../material/service";
-import { ZodError } from "zod";
-import { HttpException } from "../errors/http-exception";
 
 jest.mock("../material/service");
 
