@@ -38,7 +38,9 @@ export const create = async (req: express.Request, res: express.Response) => {
         .status(400)
         .send({ message: "Validation error: ", error: error.errors });
     } else {
-      res.status(400).send({ message: "Could not create lab: ", error: error });
+      res
+        .status(400)
+        .send({ message: "Could not create lab schedule: ", error });
     }
   }
 };
@@ -57,7 +59,18 @@ export const update = async (req: express.Request, res: express.Response) => {
         .status(400)
         .send({ message: "Validation error: ", error: error.errors });
     } else {
-      res.status(400).send({ message: "Could not update lab: ", error: error });
+      res
+        .status(400)
+        .send({ message: "Could not update lab schedule: ", error });
     }
+  }
+};
+
+export const remove = async (req: express.Request, res: express.Response) => {
+  try {
+    const { id, userId } = req.body;
+    labScheduleService.deleteById(parseInt(id), parseInt(userId));
+  } catch (error) {
+    res.status(400).send({ message: "Could not delete lab schedule: ", error });
   }
 };
