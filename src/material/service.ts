@@ -3,6 +3,7 @@ import * as repository from "./repository";
 import { env } from "../env";
 import { randomUUID } from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { NotFoundException } from "../errors/not-found-exception";
 
 interface MaterialDto {
   title: string;
@@ -19,6 +20,59 @@ interface MaterialDto {
   type: "DIDATICO" | "FORMAL";
   userId: number;
 }
+
+interface ParamsList {
+  category?:
+    | "BAREMA"
+    | "REQUERIMENTO"
+    | "UNICO"
+    | "EDITAIS"
+    | "EDITAIS_DE_BOLSAS"
+    | "APOIO"
+    | "MANUAL_DOS_CALOUROS";
+  order: "asc" | "desc";
+  search?: string;
+}
+
+type TypeMaterial =
+  | "BAREMA"
+  | "REQUERIMENTO"
+  | "UNICO"
+  | "EDITAIS"
+  | "EDITAIS_DE_BOLSAS"
+  | "APOIO"
+  | "MANUAL_DOS_CALOUROS";
+
+export const listMaterialFormal = async ({ category, ...rest }: ParamsList) => {
+  const categories: TypeMaterial[] = category
+    ? [category]
+    : ["BAREMA", "REQUERIMENTO", "UNICO", "EDITAIS", "EDITAIS_DE_BOLSAS"];
+
+  return await repository.listMaterial({ categories, type: "FORMAL", ...rest });
+};
+
+export const listMaterialDidatico = async ({
+  category,
+  ...rest
+}: ParamsList) => {
+  const categories: TypeMaterial[] = category
+    ? [category]
+    : ["APOIO", "MANUAL_DOS_CALOUROS"];
+
+  return await repository.listMaterial({
+    categories,
+    type: "DIDATICO",
+    ...rest,
+  });
+};
+
+export const findMaterialById = async (id: number) => {
+  const material = await repository.findMaterialById(id);
+  if (!material) {
+    throw new NotFoundException("Material not found!");
+  }
+  return material;
+};
 
 export const createMaterial = async (materialDto: MaterialDto) => {
   return repository.createMaterial(materialDto);
