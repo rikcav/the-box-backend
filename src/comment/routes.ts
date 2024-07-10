@@ -9,6 +9,7 @@ export const commentRoutes = (app: express.Application) => {
     authentication,
     commentController.listCommentsByPostId
   );
+  app.get("/comment/post/:postid", commentController.listCommentsByPostId);
   app.post("/comment", commentController.createNewComment);
   app.delete("/comment/:id", commentController.deleteById);
   app.put("/comment/:id", commentController.updateById);
