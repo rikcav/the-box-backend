@@ -234,11 +234,13 @@ model Register {
 model Establishment {
   id             Int     @id @default(autoincrement())
   name           String
-  type           String
+  type           String?
   phone          String?
   instagram      String?
-  schedule_days  String
-  address        String
-  schedule_hours String
-  observations   String
+  schedule_days  String?
+  address        String?
+  schedule_hours String?
+  observations   String?
+
+  @@map("establishments")
 }
