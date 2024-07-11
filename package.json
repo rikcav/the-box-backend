@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "email": "ts-node src/email/emailService.ts"
     "dev": "npx nodemon",
+    "email": "ts-node src/email/emailService.ts",
     "test": "jest"
   },
   "keywords": [],
