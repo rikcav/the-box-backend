@@ -27,6 +27,16 @@ export const get = async (id: number) => {
   return labSchedule;
 };
 
+export const getByLabId = async (labId: number) => {
+  const labSchedules = await prisma.labSchedule.findMany({
+    where: {
+      lab_id: labId,
+    },
+  });
+
+  return labSchedules;
+};
+
 export const create = async (data: CreateLabSchedule) => {
   const labSchedule = await prisma.labSchedule.create({
     data,
