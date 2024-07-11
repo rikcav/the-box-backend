@@ -46,7 +46,7 @@ export const createLabSchedule = async ({
     throw new ConflictException("weekend bookings are not allowed!");
   }
   
-  if (startTime.add(30, "millisecond").isBefore(endTime)) {
+  if (startTime.add(30, "millisecond").isAfter(endTime)) {
     throw new ConflictException("Very little time, put at least 30 minutes!");
   }
 
