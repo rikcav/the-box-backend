@@ -1,7 +1,6 @@
 import express from "express";
-import * as LabScheduleController from "./controller";
-import { authentication } from "../middleware/authentication";
+import * as controller from "./controller";
 
 export const labSheduleRoutes = (app: express.Application) => {
-  app.post("/labShedule", LabScheduleController.createLabSchedule);
+  app.post("/labshedule", controller.createLabSchedule);
 };
