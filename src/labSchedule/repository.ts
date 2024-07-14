@@ -60,6 +60,27 @@ export const update = async (id: number, data: CreateLabSchedule) => {
   return labSchedule;
 };
 
+export const findScheduleDate = async (
+  labId: number,
+  date: Date,
+  startTime: Date,
+  endTime: Date,
+) => {
+  return prisma.labSchedule.findMany({
+    where: {
+      lab_id: labId,
+      date,
+      OR: [
+        {
+          start_time: { gte: startTime, lte: endTime },
+          end_time: { gte: startTime, lte: endTime },
+          AND: { start_time: { lte: startTime }, end_time: { lte: endTime } },
+        },
+      ],
+    },
+  });
+};
+
 export const deleteById = async (id: number) => {
   const labSchedule = await prisma.labSchedule.delete({
     where: {
