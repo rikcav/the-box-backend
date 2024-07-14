@@ -4,7 +4,7 @@ import * as userService from "../user/service";
 import { validation } from "./validation";
 import { ZodDate, ZodDateCheck } from "zod";
 import dayjs from "dayjs";
-import * as LabScheduleRepository from "./repository";
+import * as service from "./repository";
 import { ConflictException } from "../errors/conflict-exception";
 
 ZodDate;
@@ -41,11 +41,10 @@ export const createLabSchedule = async ({
   labId,
   userId,
 }: LabScheduleDto) => {
-
-  if(date.day() == 0 || date.day() == 6) {
+  if (date.day() == 0 || date.day() == 6) {
     throw new ConflictException("weekend bookings are not allowed!");
   }
-  
+
   if (startTime.add(30, "millisecond").isAfter(endTime)) {
     throw new ConflictException("Very little time, put at least 30 minutes!");
   }
@@ -62,18 +61,18 @@ export const createLabSchedule = async ({
   ) {
     throw new ConflictException("Invalid schedules!");
   }
-  const conflictSchedule = await LabScheduleRepository.findScheduleDate(
+  const conflictSchedule = await service.findScheduleDate(
     labId,
     date.toDate(),
     startTime.toDate(),
-    endTime.toDate()
+    endTime.toDate(),
   );
 
   if (conflictSchedule.length) {
     throw new ConflictException("Conflict of schedules!");
   }
 
-  const labSchedule = await LabScheduleRepository.create({
+  const labSchedule = await service.create({
     date: date.toDate(),
     end_time: endTime.toDate(),
     lab_id: labId,

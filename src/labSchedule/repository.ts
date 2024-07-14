@@ -54,7 +54,7 @@ export const findScheduleDate = async (
   labId: number,
   date: Date,
   startTime: Date,
-  endTime: Date
+  endTime: Date,
 ) => {
   return prisma.labSchedule.findMany({
     where: {
@@ -64,7 +64,7 @@ export const findScheduleDate = async (
         {
           start_time: { gte: startTime, lte: endTime },
           end_time: { gte: startTime, lte: endTime },
-          AND: {start_time: {lte:startTime}, end_time: {lte: endTime}}
+          AND: { start_time: { lte: startTime }, end_time: { lte: endTime } },
         },
       ],
     },

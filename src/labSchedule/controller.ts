@@ -1,12 +1,12 @@
 import express from "express";
 import { ZodError, date, z } from "zod";
 import { HttpException } from "../errors/http-exception";
-import * as LabScheduleService from "./service";
+import * as service from "./service";
 import dayjs from "dayjs";
 
 export const createLabSchedule = async (
   request: express.Request,
-  response: express.Response
+  response: express.Response,
 ) => {
   const createLabScheduleSchema = z.object({
     startTime: z.coerce.string().transform((date) => dayjs(date)),
@@ -19,9 +19,7 @@ export const createLabSchedule = async (
   try {
     const LabScheduleDTO = createLabScheduleSchema.parse(request.body);
 
-    const labSchedule = await LabScheduleService.createLabSchedule(
-      LabScheduleDTO
-    );
+    const labSchedule = await service.createLabSchedule(LabScheduleDTO);
 
     return response.status(201).send(labSchedule);
   } catch (error) {
