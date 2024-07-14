@@ -1,5 +1,20 @@
 import * as repository from "./repository";
 import { validation } from "./validation";
+import dayjs from "dayjs";
+
+export const listEvents = async (
+  startDate: dayjs.Dayjs,
+  endDate: dayjs.Dayjs,
+) => {
+  if (startDate.isAfter(endDate)) {
+    throw "endDate cannot be before startDate!";
+  }
+
+  return await repository.findBetweenDates(
+    startDate.toDate(),
+    endDate.toDate(),
+  );
+};
 
 export const getAll = async () => {
   try {
