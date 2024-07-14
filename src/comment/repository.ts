@@ -18,6 +18,45 @@ export const deleteById = async (id: number) => {
   return comment;
 };
 
+export const listComment = async (
+  skip: number,
+  take: number,
+  order: "asc" | "desc",
+  userId: number,
+) => {
+  return await prisma.comment.findMany({
+    skip,
+    take,
+    include: {
+      like: {
+        where: {
+          user_id: userId,
+        },
+      },
+      user: { select: { name: true } },
+      _count: { select: { like: true } },
+    },
+    orderBy: { like: { _count: order } },
+  });
+};
+
+export const listCommentByPostId = async (
+  skip: number,
+  take: number,
+  order: "asc" | "desc",
+  postId: number,
+) => {
+  return await prisma.comment.findMany({
+    where: { post_id: postId },
+    skip,
+    take,
+    include: {
+      _count: { select: { like: true } },
+    },
+    orderBy: { like: { _count: order } },
+  });
+};
+
 export const updateById = async (id: number, data: any) => {
   const comment = await prisma.comment.update({
     where: {

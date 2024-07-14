@@ -1,11 +1,11 @@
-import * as lSRepository from "./repository";
+import * as repository from "./repository";
 import { CreateLabSchedule } from "./repository";
 import * as userService from "../user/service";
 import { validation } from "./validation";
 import { ZodDate, ZodDateCheck } from "zod";
 import dayjs from "dayjs";
-import * as service from "./repository";
 import { ConflictException } from "../errors/conflict-exception";
+
 
 ZodDate;
 interface LabScheduleDto {
@@ -18,7 +18,7 @@ interface LabScheduleDto {
 
 export const getAll = async () => {
   try {
-    const labSchedules = await lSRepository.getAll();
+    const labSchedules = await repository.getAll();
     return labSchedules;
   } catch (error) {
     throw error;
@@ -27,7 +27,7 @@ export const getAll = async () => {
 
 export const get = async (id: number) => {
   try {
-    const labSchedule = await lSRepository.get(id);
+    const labSchedule = await repository.get(id);
     return labSchedule;
   } catch (error) {
     throw error;
@@ -61,7 +61,7 @@ export const createLabSchedule = async ({
   ) {
     throw new ConflictException("Invalid schedules!");
   }
-  const conflictSchedule = await service.findScheduleDate(
+  const conflictSchedule = await repository.findScheduleDate(
     labId,
     date.toDate(),
     startTime.toDate(),
@@ -72,7 +72,7 @@ export const createLabSchedule = async ({
     throw new ConflictException("Conflict of schedules!");
   }
 
-  const labSchedule = await service.create({
+  const labSchedule = await repository.create({
     date: date.toDate(),
     end_time: endTime.toDate(),
     lab_id: labId,
@@ -87,14 +87,41 @@ export const createLabSchedule = async ({
     startTime: startTime.toDate(),
     endTime: endTime.toDate(),
   };
+
+export const getByLabId = async (labId: number) => {
+  try {
+    const labSchedules = await repository.getByLabId(labId);
+    return labSchedules;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const create = async (labScheduleData: CreateLabSchedule) => {
+  try {
+    const user = await userService.getUserById(labScheduleData.user_id);
+    if (user?.profile === "SUPER_USER") {
+      const data = validation.parse(labScheduleData);
+      const labSchedule = await repository.create(data);
+      return labSchedule;
+    } else {
+      throw new Error(`Only a SUPER_USER can create a lab schedule`);
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const update = async (id: number, lSData: CreateLabSchedule) => {
   try {
+    lSData.start_time = new Date(lSData.start_time);
+    lSData.end_time = new Date(lSData.end_time);
+    lSData.date = new Date(lSData.date);
+
     const user = await userService.getUserById(lSData.user_id);
     if (user?.profile === "SUPER_USER") {
       const data = validation.parse(lSData);
-      const labSchedule = await lSRepository.update(id, data);
+      const labSchedule = await repository.update(id, data);
       return labSchedule;
     } else {
       throw new Error(`Only a SUPER_USER can update a lab schedule`);
@@ -108,7 +135,7 @@ export const deleteById = async (id: number, userId: number) => {
   try {
     const user = await userService.getUserById(userId);
     if (user?.profile === "SUPER_USER") {
-      const labSchedule = await lSRepository.deleteById(id);
+      const labSchedule = await repository.deleteById(id);
       console.log("Deleted lab schedule: ", labSchedule);
     } else {
       throw new Error(`Only a SUPER_USER can delete a lab schedule`);
