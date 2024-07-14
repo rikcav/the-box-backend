@@ -34,7 +34,14 @@ export const create = async (labScheduleData: CreateLabSchedule) => {
   try {
     const user = await userService.getUserById(labScheduleData.user_id);
     if (user?.profile === "SUPER_USER") {
-      const data = validation.parse(labScheduleData);
+      const newLabScheduleData = {
+        start_time: new Date(labScheduleData.start_time),
+        end_time: new Date(labScheduleData.end_time),
+        date: new Date(labScheduleData.date),
+        user_id: labScheduleData.user_id,
+        lab_id: labScheduleData.lab_id,
+      };
+      const data = validation.parse(newLabScheduleData);
       const labSchedule = await lSRepository.create(data);
       return labSchedule;
     } else {
