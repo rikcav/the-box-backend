@@ -120,6 +120,7 @@ enum TypeMaterial {
 
 model labSchedule {
   id         Int      @id @default(autoincrement())
+  title      String
   start_time DateTime @db.Time()
   end_time   DateTime @db.Time()
   date       DateTime @db.Date
