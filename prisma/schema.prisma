@@ -241,6 +241,8 @@ model Establishment {
   address        String?
   schedule_hours String?
   observations   String?
+  description    String?
+  image          String?
 
   @@map("establishments")
 }
