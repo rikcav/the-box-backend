@@ -90,16 +90,27 @@ model Class {
 }
 
 model Material {
-  id          Int          @id @default(autoincrement())
+  id          Int                  @id @default(autoincrement())
   title       String
   url         String
-  description String       @db.Text
+  description String               @db.Text
   type        TypeMaterial
   user_id     Int
+  category    MaterialCategoryEnum
 
   user User @relation(fields: [user_id], references: [id])
 
   @@map("materials")
+}
+
+enum MaterialCategoryEnum {
+  BAREMA
+  REQUERIMENTO
+  UNICO
+  EDITAIS
+  EDITAIS_DE_BOLSAS
+  APOIO
+  MANUAL_DOS_CALOUROS
 }
 
 enum TypeMaterial {
