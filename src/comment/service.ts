@@ -1,6 +1,7 @@
 import { NotFoundException } from "../errors/not-found-exception";
 import { prisma } from "../prisma/service";
 import * as commentRepository from "./repository";
+import { getUserById } from "../user/service";
 import { commentUpdateValidation, commentValidation } from "./validation";
 
 interface CreateCommentDto {
@@ -40,7 +41,7 @@ export const listComments = async (
   page: number,
   sizePage: number,
   order: "asc" | "desc",
-  userId: number
+  userId: number,
 ) => {
   const skip = (page - 1) * sizePage;
 
@@ -48,7 +49,7 @@ export const listComments = async (
     skip,
     sizePage,
     order,
-    userId
+    userId,
   );
 
   return comments.map(
@@ -78,8 +79,16 @@ export const listCommentsByPostId = async (
     order,
     postId,
   );
+  const userPromises = comments.map((comment) => getUserById(comment.user_id));
+  const users = await Promise.all(userPromises);
 
-  return comments;
+  const fullComments = comments.map(({ _count, ...rest }, index) => ({
+    ...rest,
+    likes: _count.like,
+    commentator: users[index].name,
+  }));
+
+  return fullComments;
 };
 
 export const updateById = async (dataUpdateCommnent: UpdateCommentDto) => {

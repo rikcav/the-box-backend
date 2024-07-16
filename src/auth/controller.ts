@@ -2,11 +2,20 @@ import express from "express";
 import { ZodError, z } from "zod";
 import { authenticateService, logoutUser, registerUser } from "./service";
 import { HttpException } from "../errors/http-exception";
+import { sendEmail } from "../email/emailService";
 
 export const register = async (req: express.Request, res: express.Response) => {
   try {
     const registerDto = req.body;
     const user = await registerUser(registerDto);
+
+    const to = user.email;
+    const subject = "Confirmação de Registro!";
+    const text = `Olá ${user.name}, \n\nSeu registro foi bem-sucedido!`;
+    const html = `<p>Olá ${user.name},</p><p>Bem-vindo ao The Box!<br>Seu registro foi bem-sucedido!</p>`;
+
+    await sendEmail(to, subject, text, html);
+
     res.status(201).send({ message: "Registered", user });
   } catch (e) {
     console.log(e);

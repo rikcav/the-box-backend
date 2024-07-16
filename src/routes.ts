@@ -7,6 +7,9 @@ import { materialRoutes } from "./material/routes";
 import { labRoutes } from "./lab/routes";
 import { labSchedulesRoutes } from "./labSchedule/routes";
 import { scheduleRoutes } from "./schedule/routes";
+import { eventRoutes } from "./event/routes";
+import { eventScheduleRoutes } from "./eventSchedule/routes";
+import { establishmentRoutes } from "./establishment/routes";
 
 module.exports = (app: express.Application) => {
   authRoutes(app);
@@ -17,4 +20,7 @@ module.exports = (app: express.Application) => {
   labRoutes(app);
   labSchedulesRoutes(app);
   scheduleRoutes(app);
+  eventRoutes(app);
+  eventScheduleRoutes(app);
+  establishmentRoutes(app);
 };

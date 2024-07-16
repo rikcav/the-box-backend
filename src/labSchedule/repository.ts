@@ -27,9 +27,31 @@ export const get = async (id: number) => {
   return labSchedule;
 };
 
-export const create = async (data: CreateLabSchedule) => {
+export const getByLabId = async (labId: number) => {
+  const labSchedules = await prisma.labSchedule.findMany({
+    where: {
+      lab_id: labId,
+    },
+  });
+
+  return labSchedules;
+};
+
+export const create = async ({
+  date,
+  end_time,
+  lab_id,
+  start_time,
+  user_id,
+}: CreateLabSchedule) => {
   const labSchedule = await prisma.labSchedule.create({
-    data,
+    data: {
+      start_time,
+      end_time,
+      date,
+      user_id,
+      lab_id,
+    },
   });
 
   return labSchedule;

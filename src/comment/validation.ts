@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const commentValidation = z.object({
-  body: z.string().min(1),
+  body: z.string().min(1).max(500),
   user_id: z.number(),
   post_id: z.number(),
 });

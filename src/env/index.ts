@@ -9,13 +9,14 @@ const envSchema = z.object({
     AWS_SECRET_KEY: z.string().optional(),
     AWS_S3_BUCKET: z.string().optional(),
     AWS_REGION: z.string().optional()
+    EMAIL: z.string().email(),
+    EMAIL_PASSWORD: z.string()
 })
 
 const _env = envSchema.safeParse(process.env)
 
 if (!_env.success) {
     console.error('O Rônald precisa das variaveis: ', _env.error.format())
-
     throw new Error('Invalid environment variables')
 }
 
