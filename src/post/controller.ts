@@ -56,9 +56,9 @@ export const getPostsByCategory = async (
 
     if (error instanceof ZodError) {
       res.status(400).send({ message: "Validation failed", errors: error });
+    } else {
+      res.status(404).send({ message: "Could not get posts", errors: error });
     }
-
-    res.status(404).send({ message: "Could not get posts", errors: error });
   }
 };
 
