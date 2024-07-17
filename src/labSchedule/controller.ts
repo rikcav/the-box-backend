@@ -4,7 +4,7 @@ import { ZodError } from "zod";
 
 export const getAllLabs = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   try {
     const labs = await labScheduleService.getAll();
@@ -16,7 +16,7 @@ export const getAllLabs = async (
 
 export const getLabScheduleById = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   try {
     const id = parseInt(req.params.id);
@@ -29,7 +29,7 @@ export const getLabScheduleById = async (
 
 export const getLabSchedulesByLabId = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   try {
     const labId = parseInt(req.params.id);
@@ -44,7 +44,7 @@ export const getLabSchedulesByLabId = async (
 
 export const createNewLabEvent = async (
   req: express.Request,
-  res: express.Response
+  res: express.Response,
 ) => {
   try {
     const labSchedule = await labScheduleService.create(req.body);
@@ -52,8 +52,9 @@ export const createNewLabEvent = async (
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(400).send({ message: "Validation error: ", error });
+    } else {
+      res.status(400).send({ message: "Could not create lab schedule", error });
     }
-    res.status(400).send({ message: "Could not create lab schedule", error });
   }
 };
 
@@ -61,7 +62,7 @@ export const update = async (req: express.Request, res: express.Response) => {
   try {
     const lab = await labScheduleService.update(
       parseInt(req.params.id),
-      req.body
+      req.body,
     );
     console.log("Lab updated: ", lab);
     res.status(204).send();
@@ -70,7 +71,8 @@ export const update = async (req: express.Request, res: express.Response) => {
       res
         .status(400)
         .send({ message: "Validation error: ", error: error.errors });
+    } else {
+      res.status(400).send({ message: "Could not update lab: ", error: error });
     }
-    res.status(400).send({ message: "Could not update lab: ", error: error });
   }
 };

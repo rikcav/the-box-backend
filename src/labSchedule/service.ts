@@ -35,6 +35,7 @@ export const create = async (labScheduleData: CreateLabSchedule) => {
     const user = await userService.getUserById(labScheduleData.user_id);
     if (user?.profile === "SUPER_USER") {
       const newLabScheduleData = {
+        title: labScheduleData.title,
         start_time: new Date(labScheduleData.start_time),
         end_time: new Date(labScheduleData.end_time),
         date: new Date(labScheduleData.date),

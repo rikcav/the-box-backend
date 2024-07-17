@@ -1,6 +1,7 @@
 import { prisma } from "../prisma/service";
 
 export type CreateLabSchedule = {
+  title: string;
   start_time: Date;
   end_time: Date;
   date: Date;
@@ -38,6 +39,7 @@ export const getByLabId = async (labId: number) => {
 };
 
 export const create = async ({
+  title,
   date,
   end_time,
   lab_id,
@@ -46,6 +48,7 @@ export const create = async ({
 }: CreateLabSchedule) => {
   const labSchedule = await prisma.labSchedule.create({
     data: {
+      title,
       start_time,
       end_time,
       date,
