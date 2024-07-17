@@ -71,9 +71,9 @@ export const getPost = async (req: express.Request, res: express.Response) => {
     const post = await postService.getPost(Number(req.params.id));
     if (post) {
       return res.status(200).send(post);
+    } else {
+      return res.status(404).send({ message: "Post not found" });
     }
-
-    return res.status(404).send({ message: "Post not found" });
   } catch (error) {
     if (error instanceof ZodError) {
       return res
