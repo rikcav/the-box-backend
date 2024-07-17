@@ -12,7 +12,7 @@ export const materialRoutes = (app: express.Application) => {
   app.post(
     "/materialDidatico",
     authentication,
-    controller.createMaterialDidatico
+    controller.createMaterialDidatico,
   );
   app.post("/materialUploadUrl", controller.createSignedUrl);
 };
