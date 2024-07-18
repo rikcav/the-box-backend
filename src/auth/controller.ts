@@ -3,16 +3,19 @@ import { ZodError, z } from "zod";
 import { authenticateService, logoutUser, registerUser } from "./service";
 import { HttpException } from "../errors/http-exception";
 import { sendEmail } from "../email/emailService";
+import { loadTemplate } from "../email/utils/emailTemplate";
 
 export const register = async (req: express.Request, res: express.Response) => {
   try {
     const registerDto = req.body;
     const user = await registerUser(registerDto);
 
+    // Email notification
+
     const to = user.email;
-    const subject = "Confirmação de Registro!";
+    const subject = "The Box - Confirmação de Registro!";
     const text = `Olá ${user.name}, \n\nSeu registro foi bem-sucedido!`;
-    const html = `<p>Olá ${user.name},</p><p>Bem-vindo ao The Box!<br>Seu registro foi bem-sucedido!</p>`;
+    const html = loadTemplate("../templates/registrationTemplate.html", { name: user.name });
 
     await sendEmail(to, subject, text, html);
 
