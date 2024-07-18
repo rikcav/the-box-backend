@@ -43,6 +43,7 @@ model User {
   like       Like[]
   organizer  Organizer[]
   register   Register[]
+  subscriptions   Subscription[]
 
   @@map("users")
 }
@@ -229,4 +230,16 @@ model Register {
   schedule Schedule @relation(fields: [schedule_id], references: [id])
 
   @@map("registers")
+}
+
+model Subscription {
+  id             Int      @id @default(autoincrement())
+  endpoint       String   @unique
+  keys           Json
+  userId         Int
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("subscriptions")
 }
