@@ -50,6 +50,9 @@ export const listCommentByPostId = async (
     where: { post_id: postId },
     skip,
     take,
+    include: {
+      _count: { select: { like: true } },
+    },
     orderBy: { like: { _count: order } },
   });
 };
