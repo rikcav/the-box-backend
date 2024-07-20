@@ -1,6 +1,6 @@
 import express from "express";
 import { ZodError } from "zod";
-import { createNewPost } from "../post/controller";
+import { createPost as createPostController } from "../post/controller";
 import { createPost } from "../post/service";
 
 jest.mock("../post/service");
@@ -9,7 +9,7 @@ describe("createPost", () => {
   const mockRequest = (body: any) =>
     ({
       body,
-    } as express.Request);
+    }) as express.Request;
 
   const mockResponse = () => {
     const res: Partial<express.Response> = {};
@@ -41,7 +41,7 @@ describe("createPost", () => {
 
     (createPost as jest.Mock).mockResolvedValue(mockPost);
 
-    await createNewPost(req, res);
+    await createPostController(req, res);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith({
@@ -63,7 +63,7 @@ describe("createPost", () => {
 
     (createPost as jest.Mock).mockRejectedValue(validationError);
 
-    await createNewPost(req, res);
+    await createPostController(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({
@@ -85,7 +85,7 @@ describe("createPost", () => {
 
     (createPost as jest.Mock).mockRejectedValue(error);
 
-    await createNewPost(req, res);
+    await createPostController(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({
