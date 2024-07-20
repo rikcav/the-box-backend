@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "npx nodemon",
     "email": "ts-node src/email/emailService.ts",
-    "test": "jest"
+    "test": "jest",
+    "start": "tsc"
   },
   "keywords": [],
   "author": "",
