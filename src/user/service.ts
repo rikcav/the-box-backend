@@ -74,7 +74,7 @@ export const updateUser = async (id: number, updateData: UpdateData) => {
   try {
     const data = updateUserValidation.parse(updateData);
 
-    if (deepEqual(data, updateData)) {
+    if (data) {
       const storedUser = await getByIdRepository(id);
 
       const userData = {

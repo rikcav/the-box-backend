@@ -41,7 +41,7 @@ export const listComments = async (
   page: number,
   sizePage: number,
   order: "asc" | "desc",
-  userId: number,
+  userId: number
 ) => {
   const skip = (page - 1) * sizePage;
 
@@ -49,7 +49,7 @@ export const listComments = async (
     skip,
     sizePage,
     order,
-    userId,
+    userId
   );
 
   return comments.map(
@@ -61,7 +61,7 @@ export const listComments = async (
       userId: user_id,
       liked: !!like.length,
       ...rest,
-    }),
+    })
   );
 };
 
@@ -69,7 +69,7 @@ export const listCommentsByPostId = async (
   page: number,
   sizePage: number,
   order: "asc" | "desc",
-  postId: number,
+  postId: number
 ) => {
   const skip = (page - 1) * sizePage;
 
@@ -77,7 +77,7 @@ export const listCommentsByPostId = async (
     skip,
     sizePage,
     order,
-    postId,
+    postId
   );
   const userPromises = comments.map((comment) => getUserById(comment.user_id));
   const users = await Promise.all(userPromises);

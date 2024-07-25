@@ -15,6 +15,8 @@ export const update = async (req: express.Request, res: express.Response) => {
   try {
     const id = parseInt(req.params.id);
     const data = req.body;
+    console.log(data);
+    console.log(id);
     const user = await service.updateUser(id, data);
 
     console.log("Updated user: ", user);
@@ -28,7 +30,7 @@ export const update = async (req: express.Request, res: express.Response) => {
 
 export const deleteById = async (
   req: express.Request,
-  res: express.Response,
+  res: express.Response
 ) => {
   try {
     const user = await service.deleteUserById(parseInt(req.params.id));
